@@ -165,10 +165,10 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             b=QgsApplication.qgisSettingsDirPath().replace("/","\\")
                 
                 
-            cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstation_luncher-master', 'scripts', 'totalopenstation-cli-parser.py')
+            cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-parser.py')
             cmd2= ' -i '+self.lineEdit_input.text()+' '+'-o '+self.lineEdit_output.text()+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
-            #os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
+            os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
+            #subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
             
             #Load the layer if the format is geojson or dxf or csv           
             if self.comboBox_format2.currentIndex()== 0:
@@ -225,7 +225,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 pass
         else:
             b=QgsApplication.qgisSettingsDirPath()
-            cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstation_luncher-master', 'scripts', 'totalopenstation-cli-parser.py')
+            cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-parser.py')
             cmd2= ' -i '+self.lineEdit_input.text()+' '+'-o '+self.lineEdit_output.text()+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
             #os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
             subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
@@ -286,42 +286,42 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
     
         
     def on_pushButton_connect_pressed(self):
-        try:
+        
             
-            if platform.system() == "Windows":
-                b=QgsApplication.qgisSettingsDirPath().replace("/","\\")
-                cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstation_luncher-master', 'scripts', 'totalopenstation-cli-connector.py')
+        if platform.system() == "Windows":
+            b=QgsApplication.qgisSettingsDirPath().replace("/","\\")
+            cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
+            cmd2=' -m'+'  '+self.comboBox_model.currentText()+'  '+'-p'+'  '+self.comboBox_port.currentText()+'  '+'-o'+'  '+self.lineEdit_save_raw.text()
+            os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
+            #subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
+            layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
                 
-                subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lienEdit_save_raw.text()], shell=True)
-                layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
-                    
-                layer.isValid() 
+            layer.isValid() 
 
-                
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            else:
-                b=QgsApplication.qgisSettingsDirPath()
-                cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstation_luncher-master', 'scripts', 'totalopenstation-cli-connector.py')
-                #os.system("start cmd /k" + ' python ' +cmd)
-                subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lienEdit_save_raw.text()], shell=True)
-                
-                layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
-                    
-                layer.isValid() 
-
-                
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
             
+            QgsProject.instance().addMapLayer(layer)
+
+            QMessageBox.warning(self, 'Total Open Station luncher',
+                                      'data loaded into panel Layer', QMessageBox.Ok)
+        else:
+            b=QgsApplication.qgisSettingsDirPath()
+            cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
+            #os.system("start cmd /k" + ' python ' +cmd)
+            subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
             
+            layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
+                
+            layer.isValid() 
+
             
-            self.loadCsv(self.lineEdit_save_raw.text())
+            QgsProject.instance().addMapLayer(layer)
+
+            QMessageBox.warning(self, 'Total Open Station luncher',
+                                      'data loaded into panel Layer', QMessageBox.Ok)
+        
+        
+        
+        self.loadCsv(self.lineEdit_save_raw.text())
             
         
-        except:
-            pass
+        

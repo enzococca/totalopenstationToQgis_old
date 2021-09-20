@@ -14,7 +14,7 @@
    <string>Total Open Station luncher</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset>
     <normaloff>:/plugins/totalstation/icon.png</normaloff>:/plugins/totalstation/icon.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -77,6 +77,11 @@
          <item>
           <property name="text">
            <string>topcon_gpt_3005</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>sokkia</string>
           </property>
          </item>
          <item>
@@ -560,7 +565,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../totalopenstation_luncher-master/resources.qrc"/>
  </resources>
  <connections>
   <connection>
