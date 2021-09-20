@@ -167,8 +167,8 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 
             cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-parser.py')
             cmd2= ' -i '+self.lineEdit_input.text()+' '+'-o '+self.lineEdit_output.text()+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
-            os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            #subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
+            #os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
+            subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
             
             #Load the layer if the format is geojson or dxf or csv           
             if self.comboBox_format2.currentIndex()== 0:
