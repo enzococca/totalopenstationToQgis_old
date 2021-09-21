@@ -14,8 +14,8 @@
    <string>Total Open Station luncher</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/plugins/totalstation/icon.png</normaloff>:/plugins/totalstation/icon.png</iconset>
+   <iconset resource="resources.qrc">
+    <normaloff>:/plugins/totalopenstationToQgis/icon.png</normaloff>:/plugins/totalopenstationToQgis/icon.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
@@ -43,6 +43,10 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="Connection">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/plugins/totalopenstationToQgis/icon.png</normaloff>:/plugins/totalopenstationToQgis/icon.png</iconset>
+      </attribute>
       <attribute name="title">
        <string>Connection</string>
       </attribute>
@@ -565,7 +569,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../totalopenstation_luncher-master/resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections>
   <connection>
