@@ -85,12 +85,12 @@
          </item>
          <item>
           <property name="text">
-           <string>sokkia</string>
+           <string>custom</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>custom</string>
+           <string>sokkia_rku_630</string>
           </property>
          </item>
         </widget>
