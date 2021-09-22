@@ -64,7 +64,7 @@ class Totalopenstation:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Total Open Station luncher')
+        self.menu = self.tr(u'&Total Open Station To Qgis')
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
@@ -163,10 +163,10 @@ class Totalopenstation:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/totalstation/icon.png'
+        icon_path = ':/plugins/totalopenstationToQgis/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'Total Open Station luncher'),
+            text=self.tr(u'Total Open Station '),
             callback=self.run,
             parent=self.iface.mainWindow())
 
@@ -178,7 +178,7 @@ class Totalopenstation:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&Total Open Station luncher'),
+                self.tr(u'&Total Open Station '),
                 action)
             self.iface.removeToolBarIcon(action)
 
