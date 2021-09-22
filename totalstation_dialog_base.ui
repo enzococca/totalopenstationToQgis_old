@@ -40,7 +40,7 @@
    <item row="0" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="Connection">
       <attribute name="icon">
@@ -95,6 +95,13 @@
          </item>
         </widget>
        </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Save Raw</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
@@ -102,10 +109,60 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox_port">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="currentText">
+          <string/>
+         </property>
+         <item>
+          <property name="text">
+           <string/>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>COM3</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>COM4</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>COM5</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>/dev/ttyUSB0</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>/dev/ttyS0</string>
+          </property>
+         </item>
+        </widget>
+       </item>
        <item row="2" column="2">
         <widget class="QToolButton" name="toolButton_save_raw">
          <property name="text">
           <string>...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="lineEdit_save_raw"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Model</string>
          </property>
         </widget>
        </item>
@@ -322,70 +379,16 @@
          </widget>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="lineEdit_save_raw"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Model</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="comboBox_port">
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-         <property name="currentText">
-          <string/>
-         </property>
-         <item>
-          <property name="text">
-           <string/>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>COM3</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>COM4</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>COM5</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>/dev/ttyUSB0</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>/dev/ttyS0</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Save Raw</string>
-         </property>
-        </widget>
-       </item>
        <item row="4" column="0" colspan="3">
-        <widget class="QTableView" name="tableView">
-         <property name="alternatingRowColors">
+        <widget class="QTextEdit" name="textEdit">
+         <property name="autoFormatting">
+          <set>QTextEdit::AutoAll</set>
+         </property>
+         <property name="readOnly">
           <bool>true</bool>
          </property>
-         <property name="gridStyle">
-          <enum>Qt::DashDotDotLine</enum>
+         <property name="placeholderText">
+          <string>Welcome! turn on your device</string>
          </property>
         </widget>
        </item>
@@ -560,6 +563,22 @@
         <string>Process</string>
        </property>
       </widget>
+      <widget class="QTableView" name="tableView">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>230</y>
+         <width>675</width>
+         <height>511</height>
+        </rect>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+       <property name="gridStyle">
+        <enum>Qt::DashDotDotLine</enum>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>
@@ -576,22 +595,5 @@
  <resources>
   <include location="resources.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>lineEdit_output</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>tableView</receiver>
-   <slot>selectAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>348</x>
-     <y>156</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>361</x>
-     <y>628</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
