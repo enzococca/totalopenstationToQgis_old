@@ -133,7 +133,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             self,
             "Set file name",
             '',
-            "(*.*)"
+            "(*.tops)"
         )[0]
         #filename=dbpath.split("/")[-1]
         if output_:
@@ -291,9 +291,9 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         if platform.system() == "Windows":
             b=QgsApplication.qgisSettingsDirPath().replace("/","\\")
             cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
-            cmd2=' -m'+'  '+self.comboBox_model.currentText()+'  '+'-p'+'  '+self.comboBox_port.currentText()+'  '+'-o'+'  '+self.lineEdit_save_raw.text()
-            os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            #subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
+            # cmd2=' -m'+'  '+self.comboBox_model.currentText()+'  '+'-p'+'  '+self.comboBox_port.currentText()+'  '+'-o'+'  '+self.lineEdit_save_raw.text()
+            # os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
+            subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
             
             
             
