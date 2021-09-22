@@ -23,7 +23,8 @@
 """
 
 import os
-import sys
+import time, sys
+import threading
 import subprocess
 import platform
 import csv
@@ -31,7 +32,7 @@ import tempfile
 from qgis.PyQt import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import  *
-from qgis.PyQt.QtWidgets import QApplication, QDialog, QMessageBox, QFileDialog,QLineEdit,QWidget,QCheckBox
+from qgis.PyQt.QtWidgets import QVBoxLayout, QApplication, QDialog, QMessageBox, QFileDialog,QLineEdit,QWidget,QCheckBox,QProgressBar
 from qgis.PyQt.QtSql import *
 from qgis.PyQt.uic import loadUiType
 from qgis.PyQt import  QtWidgets 
@@ -43,6 +44,26 @@ from qgis.utils import iface
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'totalstation_dialog_base.ui'))
+
+class progressThread(QThread):
+
+    progress_update = QtCore.pyqtSignal(int) # or pyqtSignal(int)
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def __del__(self):
+        self.wait()
+
+
+    def run(self):
+        # your logic here
+        while 1:      
+            maxVal = 1 # NOTE THIS CHANGED to 1 since updateProgressBar was updating the value by 1 every time
+            self.progress_update.emit(maxVal) # self.emit(SIGNAL('PROGRESS'), maxVal)
+            # Tell the thread to sleep for 1 second and let other things run
+            time.sleep(1)
+
 
 
 class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
@@ -64,6 +85,14 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         self.toolButton_save_raw.clicked.connect(self.setPathsaveraw)
         self.mDockWidget.setHidden(True)
         self.comboBox_model.currentIndexChanged.connect(self.tt)
+    
+        
+    def updateProgressBar(self, maxVal):
+        self.progressBar.setValue(self.progressBar.value() + maxVal)
+    
+        if maxVal == 0:
+            self.progressBar.setValue(100)
+    
     def tt(self):    
         if self.comboBox_model.currentIndex()!=6:
             
@@ -158,6 +187,8 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 #print('Deleting row %d...' % index.row())
                 self.model.removeRow(index.row())
     
+
+    
     def on_pushButton_export_pressed(self):
         
         self.delete()
@@ -168,7 +199,9 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-parser.py')
             cmd2= ' -i '+self.lineEdit_input.text()+' '+'-o '+self.lineEdit_output.text()+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
             #os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
+            p=subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
+            
+            self.updateProgressBar(p)
             
             #Load the layer if the format is geojson or dxf or csv           
             if self.comboBox_format2.currentIndex()== 0:
@@ -182,7 +215,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 QMessageBox.warning(self, 'Total Open Station luncher',
                                           'data loaded into panel Layer', QMessageBox.Ok)
             
-                
+                self.progressBar.reset()
                 temp=tempfile.mkstemp(suffix = '.csv')
                 QgsVectorFileWriter.writeAsVectorFormat(layer, 'test.csv', "utf-8", driverName = "CSV")
                 
@@ -198,7 +231,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                 QMessageBox.warning(self, 'Total Open Station luncher',
                                           'data loaded into panel Layer', QMessageBox.Ok)
-                                          
+                self.progressBar.reset()                          
                 temp=tempfile.mkstemp(suffix = '.csv')
                 QgsVectorFileWriter.writeAsVectorFormat(layer, 'test.csv', "utf-8", driverName = "CSV")
                 self.loadCsv('test.csv')                     
@@ -220,8 +253,9 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 
                 
 
-            
+                self.progressBar.reset()
             else:
+                self.progressBar.reset()
                 pass
         else:
             b=QgsApplication.qgisSettingsDirPath()
@@ -284,7 +318,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 pass
     
     
-        
+       
     def on_pushButton_connect_pressed(self):
         
             
@@ -293,26 +327,26 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
             # cmd2=' -m'+'  '+self.comboBox_model.currentText()+'  '+'-p'+'  '+self.comboBox_port.currentText()+'  '+'-o'+'  '+self.lineEdit_save_raw.text()
             # os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
+            c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
             
-            
-            
-            
+            self.updateProgressBar(c)
             # layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
                 
             # layer.isValid() 
 
             
             # QgsProject.instance().addMapLayer(layer)
-
-            # QMessageBox.warning(self, 'Total Open Station luncher',
-                                      # 'data loaded into panel Layer', QMessageBox.Ok)
+            
+            QMessageBox.warning(self, 'Total Open Station luncher',
+                                      'data dowloaded\n Go to ProcessData to convert and\n load data into Qgis', QMessageBox.Ok)
+        
+            self.progressBar.reset()
         else:
             b=QgsApplication.qgisSettingsDirPath()
             cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
             #os.system("start cmd /k" + ' python ' +cmd)
-            subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
-            
+            c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
+            self.updateProgressBar(c)
             layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
                 
             layer.isValid() 
@@ -323,11 +357,10 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             QMessageBox.warning(self, 'Total Open Station luncher',
                                       'data loaded into panel Layer', QMessageBox.Ok)
         
-        
+            self.progressBar.reset()
         
         r=open(self.lineEdit_save_raw.text(),'r')
         lines = r.read().split(',')
         self.textEdit.setText(str(lines))
             
-        
         
