@@ -94,7 +94,7 @@ result = station.result
 
 if options.outfile:
     if not os.path.exists(options.outfile):
-        e = open(options.outfile, 'w')
+        e = open(options.outfile, 'wb')
         e.write(result)
         e.close()
         print("Downloaded data saved to out file %s" % options.outfile)
