@@ -21,7 +21,7 @@
    <item row="0" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="Connection">
       <attribute name="icon">
@@ -602,5 +602,22 @@
  <resources>
   <include location="resources.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>lineEdit_output</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>tableView</receiver>
+   <slot>selectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>277</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
