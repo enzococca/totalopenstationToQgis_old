@@ -454,6 +454,11 @@
        </item>
        <item>
         <property name="text">
+         <string>landxml</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>leica_gsi</string>
         </property>
        </item>
@@ -616,6 +621,22 @@
     <hint type="destinationlabel">
      <x>102</x>
      <y>277</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEdit_save_raw</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>lineEdit_save_raw</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>457</x>
+     <y>124</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>550</x>
+     <y>129</y>
     </hint>
    </hints>
   </connection>

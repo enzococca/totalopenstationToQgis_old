@@ -40,7 +40,6 @@ from qgis.core import  *
 from qgis.gui import  *
 from qgis.utils import iface
 
-
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'totalstation_dialog_base.ui'))
@@ -78,6 +77,9 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        self.progress_thread = progressThread()
+        #self.progress_thread.start()
+        self.progress_thread.progress_update.connect(self.updateProgressBar)
         self.model = QtGui.QStandardItemModel(self)
         self.tableView.setModel(self.model)
         self.toolButton_input.clicked.connect(self.setPathinput)
@@ -85,8 +87,19 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         self.toolButton_save_raw.clicked.connect(self.setPathsaveraw)
         self.mDockWidget.setHidden(True)
         self.comboBox_model.currentIndexChanged.connect(self.tt)
-    
+        self.lineEdit_save_raw.textChanged.connect(self.connect)
+        self.pushButton_connect.setEnabled(False)
         
+    def connect(self):
+        
+        
+        if self.lineEdit_save_raw.text():
+            
+            self.pushButton_connect.setEnabled(True)
+        
+        else:
+            self.pushButton_connect.setEnabled(False)
+    
     def updateProgressBar(self, maxVal):
         self.progressBar.setValue(self.progressBar.value() + maxVal)
     
@@ -320,47 +333,74 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
     
        
     def on_pushButton_connect_pressed(self):
-        
+        self.textEdit.clear()
             
         if platform.system() == "Windows":
             b=QgsApplication.qgisSettingsDirPath().replace("/","\\")
             cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
             # cmd2=' -m'+'  '+self.comboBox_model.currentText()+'  '+'-p'+'  '+self.comboBox_port.currentText()+'  '+'-o'+'  '+self.lineEdit_save_raw.text()
             # os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
-            
-            self.updateProgressBar(c)
-            # layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
+            #c=''
+            try:
+                c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
                 
-            # layer.isValid() 
+                self.updateProgressBar(c)
+                layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
+                    
+                layer.isValid() 
 
+                
+                QgsProject.instance().addMapLayer(layer)
+
+                QMessageBox.warning(self, 'Total Open Station luncher',
+                                          'data loaded into panel Layer', QMessageBox.Ok)
             
-            # QgsProject.instance().addMapLayer(layer)
+                self.progressBar.reset()
+                
+                
+            except Exception as e:
+                if self.comboBox_port.currentText()=='':
+                    self.textEdit.append('Insert port please!')
+                
+                self.textEdit.append('Connection falied!')   
+                
+            else:
+                self.textEdit.append('Connection OK.................!\n\n\n')
+                self.textEdit.append('Start dowload data.................!\n\n\n')
+                self.textEdit.append('Dowload finished.................!\n\n\n')
+                self.textEdit.append('Result:\n')
+                r=open(self.lineEdit_save_raw.text(),'r')
+                lines = r.read().split(',')
+                self.textEdit.append(str(lines))
             
-            QMessageBox.warning(self, 'Total Open Station luncher',
-                                      'data dowloaded\n Go to ProcessData to convert and\n load data into Qgis', QMessageBox.Ok)
-        
-            self.progressBar.reset()
         else:
             b=QgsApplication.qgisSettingsDirPath()
             cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
             #os.system("start cmd /k" + ' python ' +cmd)
-            c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
-            self.updateProgressBar(c)
-            layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
+            try:
+                c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',self.lineEdit_save_raw.text()], shell=True)
+                self.updateProgressBar(c)
+                if self.comboBox_model.currentText()=='':
+                    self.textEdit.setText('insert port please!')
+                if c!=0:
+                    self.textEdit.setText('connessione fallita!')
+            
+                layer = QgsVectorLayer(self.lineEdit_save_raw.text(), 'totalopenstation', 'ogr')
+                    
+                layer.isValid() 
+
                 
-            layer.isValid() 
+                QgsProject.instance().addMapLayer(layer)
 
+                QMessageBox.warning(self, 'Total Open Station luncher',
+                                          'data loaded into panel Layer', QMessageBox.Ok)
             
-            QgsProject.instance().addMapLayer(layer)
-
-            QMessageBox.warning(self, 'Total Open Station luncher',
-                                      'data loaded into panel Layer', QMessageBox.Ok)
-        
-            self.progressBar.reset()
-        
-        r=open(self.lineEdit_save_raw.text(),'r')
-        lines = r.read().split(',')
-        self.textEdit.setText(str(lines))
+                self.progressBar.reset()
+                r=open(self.lineEdit_save_raw.text(),'r')
+                lines = r.read().split(',')
+                self.textEdit.setText(str(lines))
             
+            except:
+                pass
+        
         
