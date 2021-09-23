@@ -39,10 +39,25 @@ from qgis.PyQt import  QtWidgets
 from qgis.core import  *
 from qgis.gui import  *
 from qgis.utils import iface
-
+from numpy import interp
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'totalstation_dialog_base.ui'))
+
+
+class Progress:
+    def __init__(self, value, end, title='Downloading',buffer=20):
+        self.title = title
+        #when calling in a for loop it doesn't include the last number
+        self.end = end -1
+        self.buffer = buffer
+        self.value = value
+        self.progress()
+
+    def progress(self):
+        maped = int(interp(self.value, [0, self.end], [0, self.buffer]))
+        print(f'{self.title}: [{"#"*maped}{"-"*(self.buffer - maped)}]{self.value}/{self.end} {((self.value/self.end)*100):.2f}%', end='\r')
+
 
 class progressThread(QThread):
 
@@ -211,11 +226,22 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 
             cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-parser.py')
             cmd2= ' -i '+self.lineEdit_input.text()+' '+'-o '+self.lineEdit_output.text()+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
-            #os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            p=subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
-            
-            self.updateProgressBar(p)
-            
+            try:#os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
+                p=subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
+                
+                self.updateProgressBar(p)
+            except Exception as e:
+                
+                self.textEdit.append('Connection falied!')   
+                
+            else:
+                self.textEdit.append('Connection OK.................!\n\n\n')
+                self.textEdit.append('Start dowload data.................!\n\n\n')
+                for x in range(21):  #set to 21 to include until 20
+                    self.textEdit.append(str(Progress(x, 21)))
+                
+                self.textEdit.append('Dowload finished.................!\n\n\n')
+                self.textEdit.append('Result:\n')
             #Load the layer if the format is geojson or dxf or csv           
             if self.comboBox_format2.currentIndex()== 0:
                 
@@ -367,6 +393,9 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             else:
                 self.textEdit.append('Connection OK.................!\n\n\n')
                 self.textEdit.append('Start dowload data.................!\n\n\n')
+                for x in range(21):  #set to 21 to include until 20
+                    self.textEdit.append(Progress(x, 21))
+                
                 self.textEdit.append('Dowload finished.................!\n\n\n')
                 self.textEdit.append('Result:\n')
                 r=open(self.lineEdit_save_raw.text(),'r')
