@@ -227,7 +227,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-parser.py')
             cmd2= ' -i '+self.lineEdit_input.text()+' '+'-o '+self.lineEdit_output.text()+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
             try:#os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-                p=subprocess.check_call(['python',cmd, '-i',self.lineEdit_input.text(),'-o',self.lineEdit_output.text(),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
+                p=subprocess.check_call(['python',cmd, '-i',str(self.lineEdit_input.text()),'-o',str(self.lineEdit_output.text()),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
                 
                 self.updateProgressBar(p)
             except Exception as e:
@@ -245,7 +245,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             #Load the layer if the format is geojson or dxf or csv           
             if self.comboBox_format2.currentIndex()== 0:
                 
-                layer = QgsVectorLayer(self.lineEdit_output.text(), 'totalopenstation', 'ogr')
+                layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
                 
                 layer.isValid() 
 
@@ -261,7 +261,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 self.loadCsv('test.csv')
             elif self.comboBox_format2.currentIndex()== 1:
                 
-                layer = QgsVectorLayer(self.lineEdit_output.text(), 'totalopenstation', 'ogr')
+                layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
                 
                 layer.isValid() 
 
@@ -276,7 +276,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 self.loadCsv('test.csv')                     
             
             elif self.comboBox_format2.currentIndex()== 2:
-                uri = "file:///"+self.lineEdit_output.text()+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
+                uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
                 layer = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
                 
                 layer.isValid() 
@@ -288,7 +288,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                                           'data loaded into panel Layer', QMessageBox.Ok)
             
 
-                self.loadCsv(self.lineEdit_output.text())
+                self.loadCsv(str(self.lineEdit_output.text()))
                 
                 
 
