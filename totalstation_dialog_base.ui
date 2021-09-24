@@ -18,6 +18,13 @@
     <normaloff>:/plugins/totalopenstationToQgis/icon.png</normaloff>:/plugins/totalopenstationToQgis/icon.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
@@ -549,25 +556,6 @@
         </rect>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_export">
-       <property name="geometry">
-        <rect>
-         <x>570</x>
-         <y>180</y>
-         <width>100</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Process</string>
-       </property>
-      </widget>
       <widget class="QTableView" name="tableView">
        <property name="geometry">
         <rect>
@@ -587,10 +575,16 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QProgressBar" name="progressBar">
-     <property name="value">
-      <number>0</number>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="pushButton_export">
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Process</string>
      </property>
     </widget>
    </item>

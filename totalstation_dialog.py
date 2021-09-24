@@ -24,6 +24,7 @@
 
 import os
 import time, sys
+from time import sleep
 import threading
 import subprocess
 import platform
@@ -237,6 +238,8 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             else:
                 self.textEdit.append('Connection OK.................!\n\n\n')
                 self.textEdit.append('Start dowload data.................!\n\n\n')
+                sleep(5)
+                self.textEdit.repaint()
                 for x in range(21):  #set to 21 to include until 20
                     self.textEdit.append(str(Progress(x, 21)))
                 
