@@ -22,6 +22,7 @@
  ***************************************************************************/
 """
 
+from tqdm import tqdm
 import os
 import time, sys
 from time import sleep
@@ -46,38 +47,26 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'totalstation_dialog_base.ui'))
 
 
-class Progress:
-    def __init__(self, value, end, title='Downloading',buffer=20):
-        self.title = title
-        #when calling in a for loop it doesn't include the last number
-        self.end = end -1
-        self.buffer = buffer
-        self.value = value
-        self.progress()
-
-    def progress(self):
-        maped = int(interp(self.value, [0, self.end], [0, self.buffer]))
-        print(f'{self.title}: [{"#"*maped}{"-"*(self.buffer - maped)}]{self.value}/{self.end} {((self.value/self.end)*100):.2f}%', end='\r')
 
 
-class progressThread(QThread):
+# class progressThread(QThread):
 
-    progress_update = QtCore.pyqtSignal(int) # or pyqtSignal(int)
+    # progress_update = QtCore.pyqtSignal(int) # or pyqtSignal(int)
 
-    def __init__(self):
-        QThread.__init__(self)
+    # def __init__(self):
+        # QThread.__init__(self)
 
-    def __del__(self):
-        self.wait()
+    # def __del__(self):
+        # self.wait()
 
 
-    def run(self):
-        # your logic here
-        while 1:      
-            maxVal = 1 # NOTE THIS CHANGED to 1 since updateProgressBar was updating the value by 1 every time
-            self.progress_update.emit(maxVal) # self.emit(SIGNAL('PROGRESS'), maxVal)
-            # Tell the thread to sleep for 1 second and let other things run
-            time.sleep(1)
+    # def run(self):
+        # # your logic here
+        # while 1:      
+            # maxVal = 1 # NOTE THIS CHANGED to 1 since updateProgressBar was updating the value by 1 every time
+            # self.progress_update.emit(maxVal) # self.emit(SIGNAL('PROGRESS'), maxVal)
+            # # Tell the thread to sleep for 1 second and let other things run
+            # time.sleep(1)
 
 
 
@@ -93,9 +82,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.progress_thread = progressThread()
-        #self.progress_thread.start()
-        self.progress_thread.progress_update.connect(self.updateProgressBar)
+        
         self.model = QtGui.QStandardItemModel(self)
         self.tableView.setModel(self.model)
         self.toolButton_input.clicked.connect(self.setPathinput)
@@ -116,12 +103,13 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         else:
             self.pushButton_connect.setEnabled(False)
     
-    def updateProgressBar(self, maxVal):
-        self.progressBar.setValue(self.progressBar.value() + maxVal)
+    # def updateProgressBar(self, maxVal):
+        # self.progressBar.setValue(self.progressBar.value() + maxVal)
     
-        if maxVal == 0:
-            self.progressBar.setValue(100)
-    
+        # if maxVal == 0:
+            # self.progressBar.setValue(100)
+        # self.progress_thread = progressThread()
+        # self.progress_thread.start()
     def tt(self):    
         if self.comboBox_model.currentIndex()!=6:
             
@@ -220,144 +208,147 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
     
     def on_pushButton_export_pressed(self):
         
+        
         self.delete()
         if platform.system() == "Windows":
             b=QgsApplication.qgisSettingsDirPath().replace("/","\\")
                 
                 
             cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-parser.py')
-            cmd2= ' -i '+str(self.lineEdit_input.text())+' '+'-o '+str(self.lineEdit_output.text())+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
-            try:#os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-                p=subprocess.check_call(['python',cmd, '-i',str(self.lineEdit_input.text()),'-o',str(self.lineEdit_output.text()),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
+            # cmd2= ' -i '+str(self.lineEdit_input.text())+' '+'-o '+str(self.lineEdit_output.text())+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
+            #os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
+            try:
+                p=subprocess.check_call(['python',cmd, '-i',str(self.lineEdit_input.text()),'-o',str(self.lineEdit_output.text()),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)     
+               
                 
-                self.updateProgressBar(p)
+            
+                
+                #Load the layer if the format is geojson or dxf or csv           
+                if self.comboBox_format2.currentIndex()== 0:
+                    
+                    layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
+                    
+                    layer.isValid() 
+
+                    QgsProject.instance().addMapLayer(layer)
+
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
+                
+                    temp=tempfile.mkstemp(suffix = '.csv')
+                    QgsVectorFileWriter.writeAsVectorFormat(layer, 'test.csv', "utf-8", driverName = "CSV")
+                    
+                    self.loadCsv('test.csv')
+                elif self.comboBox_format2.currentIndex()== 1:
+                    
+                    layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
+                    
+                    layer.isValid() 
+
+                    
+                    QgsProject.instance().addMapLayer(layer)
+
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
+                    self.progressBar.reset()                          
+                    temp=tempfile.mkstemp(suffix = '.csv')
+                    QgsVectorFileWriter.writeAsVectorFormat(layer, 'test.csv', "utf-8", driverName = "CSV")
+                    self.loadCsv('test.csv')                     
+                
+                elif self.comboBox_format2.currentIndex()== 2:
+                    uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
+                    layer = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
+                    
+                    layer.isValid() 
+
+                    
+                    QgsProject.instance().addMapLayer(layer)
+
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
+                
+
+                    self.loadCsv(str(self.lineEdit_output.text()))
+                    
+                    
+
+                    
+                else:
+                    
+                    pass
+        
             except Exception as e:
-                
-                self.textEdit.append('Connection falied!')   
-                
-            else:
-                self.textEdit.append('Connection OK.................!\n\n\n')
-                self.textEdit.append('Start dowload data.................!\n\n\n')
-                # sleep(1)
-                # self.textEdit.repaint()
-                for x in range(21):  #set to 21 to include until 20
-                    self.textEdit.append(str(Progress(x, 21)))
-                
-                self.textEdit.append('Dowload finished.................!\n\n\n')
-                self.textEdit.append('Result:\n')
-            #Load the layer if the format is geojson or dxf or csv           
-            if self.comboBox_format2.currentIndex()== 0:
-                
-                layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
-                
-                layer.isValid() 
-
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            
-                self.progressBar.reset()
-                temp=tempfile.mkstemp(suffix = '.csv')
-                QgsVectorFileWriter.writeAsVectorFormat(layer, 'test.csv', "utf-8", driverName = "CSV")
-                
-                self.loadCsv('test.csv')
-            elif self.comboBox_format2.currentIndex()== 1:
-                
-                layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
-                
-                layer.isValid() 
-
-                
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-                self.progressBar.reset()                          
-                temp=tempfile.mkstemp(suffix = '.csv')
-                QgsVectorFileWriter.writeAsVectorFormat(layer, 'test.csv', "utf-8", driverName = "CSV")
-                self.loadCsv('test.csv')                     
-            
-            elif self.comboBox_format2.currentIndex()== 2:
-                uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
-                layer = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
-                
-                layer.isValid() 
-
-                
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            
-
-                self.loadCsv(str(self.lineEdit_output.text()))
-                
-                
-
-                self.progressBar.reset()
-            else:
-                self.progressBar.reset()
-                pass
+                    QMessageBox.warning(self, 'Total Open Station',
+                                          str(e), QMessageBox.Ok)
+        
         else:
             b=QgsApplication.qgisSettingsDirPath()
             cmd = os.path.join(os.sep, b, 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-parser.py')
-            cmd2= ' -i '+str(self.lineEdit_input.text())+' '+'-o '+str(self.lineEdit_output.text())+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
+            # cmd2= ' -i '+str(self.lineEdit_input.text())+' '+'-o '+str(self.lineEdit_output.text())+' '+'-f'+' '+self.comboBox_format.currentText()+' '+'-t'+' '+self.comboBox_format2.currentText()+' '+'--overwrite'
             #os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            subprocess.check_call(['python',cmd, '-i',str(self.lineEdit_input.text()),'-o',str(self.lineEdit_output.text()),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
+            try:
+                p=subprocess.check_call(['python',cmd, '-i',str(self.lineEdit_input.text()),'-o',str(self.lineEdit_output.text()),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)     
+               
+                
             
-            #Load the layer if the format is geojson or dxf or csv           
-            if self.comboBox_format2.currentIndex()== 0:
                 
-                layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
-                
-                layer.isValid() 
+                #Load the layer if the format is geojson or dxf or csv           
+                if self.comboBox_format2.currentIndex()== 0:
+                    
+                    layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
+                    
+                    layer.isValid() 
 
-                QgsProject.instance().addMapLayer(layer)
+                    QgsProject.instance().addMapLayer(layer)
 
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            
-            
-                r=open(str(self.lineEdit_output.text()),'r')
-                lines = r.read().split(',')
-                self.textEdit.setText(str(lines))
-            elif self.comboBox_format2.currentIndex()== 1:
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
                 
-                layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
-                
-                layer.isValid() 
+                    temp=tempfile.mkstemp(suffix = '.csv')
+                    QgsVectorFileWriter.writeAsVectorFormat(layer, 'test.csv', "utf-8", driverName = "CSV")
+                    
+                    self.loadCsv('test.csv')
+                elif self.comboBox_format2.currentIndex()== 1:
+                    
+                    layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
+                    
+                    layer.isValid() 
 
-                
-                QgsProject.instance().addMapLayer(layer)
+                    
+                    QgsProject.instance().addMapLayer(layer)
 
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-                                          
-                r=open(str(self.lineEdit_output.text()),'r')
-                lines = r.read().split(',')
-                self.textEdit.setText(str(lines))                          
-            
-            elif self.comboBox_format2.currentIndex()== 2:
-                uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
-                layer = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
+                    self.progressBar.reset()                          
+                    temp=tempfile.mkstemp(suffix = '.csv')
+                    QgsVectorFileWriter.writeAsVectorFormat(layer, 'test.csv', "utf-8", driverName = "CSV")
+                    self.loadCsv('test.csv')                     
                 
-                layer.isValid() 
+                elif self.comboBox_format2.currentIndex()== 2:
+                    uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
+                    layer = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
+                    
+                    layer.isValid() 
 
-                
-                QgsProject.instance().addMapLayer(layer)
+                    
+                    QgsProject.instance().addMapLayer(layer)
 
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            
-
-                self.loadCsv(str(self.lineEdit_output.text()))
-                
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
                 
 
-            
-            else:
-                pass
+                    self.loadCsv(str(self.lineEdit_output.text()))
+                    
+                    
+
+                    
+                else:
+                    
+                    pass
+        
+            except Exception as e:
+                    QMessageBox.warning(self, 'Total Open Station',
+                                          str(e), QMessageBox.Ok)
     
     
        
@@ -371,68 +362,56 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             # os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
             #c=''
             try:
-                c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',str(self.lineEdit_save_raw.text())], shell=True)
                 
-                self.updateProgressBar(c)
-                layer = QgsVectorLayer(str(self.lineEdit_save_raw.text()), 'totalopenstation', 'ogr')
-                    
-                layer.isValid() 
-
+                # self.progress_thread.progress_update.connect(self.updateProgressBar)
                 
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            
-                self.progressBar.reset()
+                subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',str(self.lineEdit_save_raw.text())], shell=True)
+                
+                
                 
                 
             except Exception as e:
                 if self.comboBox_port.currentText()=='':
-                    self.textEdit.append('Insert port please!')
+                    self.textEdit.appendPlainText('Insert port please!')
                 
-                self.textEdit.append('Connection falied!')   
+                self.textEdit.appendPlainText('Connection falied!\n'+str(e))   
                 
             else:
-                self.textEdit.append('Connection OK.................!\n\n\n')
-                self.textEdit.append('Start dowload data.................!\n\n\n')
-                for x in range(21):  #set to 21 to include until 20
-                    self.textEdit.append(Progress(x, 21))
+                self.textEdit.appendPlainText('Connection OK.................!\n\n\n')
+                self.textEdit.appendPlainText('Start dowload data.................!\n')
                 
-                self.textEdit.append('Dowload finished.................!\n\n\n')
-                self.textEdit.append('Result:\n')
                 r=open(str(self.lineEdit_save_raw.text()),'r')
                 lines = r.read().split(',')
-                self.textEdit.append(str(lines))
+                self.textEdit.appendPlainText(str(lines))
             
         else:
             b=QgsApplication.qgisSettingsDirPath()
             cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
-            #os.system("start cmd /k" + ' python ' +cmd)
+            # cmd2=' -m'+'  '+self.comboBox_model.currentText()+'  '+'-p'+'  '+self.comboBox_port.currentText()+'  '+'-o'+'  '+str(self.lineEdit_save_raw.text())
+            # os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
+            #c=''
             try:
-                c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',str(self.lineEdit_save_raw.text())], shell=True)
-                self.updateProgressBar(c)
-                if self.comboBox_model.currentText()=='':
-                    self.textEdit.setText('insert port please!')
-                if c!=0:
-                    self.textEdit.setText('connessione fallita!')
-            
-                layer = QgsVectorLayer(str(self.lineEdit_save_raw.text()), 'totalopenstation', 'ogr')
-                    
-                layer.isValid() 
-
+                # self.progress_thread = progressThread()
+                # self.progress_thread.start()
+                # self.progress_thread.progress_update.connect(self.updateProgressBar)
                 
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            
-                self.progressBar.reset()
+                subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',str(self.lineEdit_save_raw.text())], shell=True)
+                
+                
+                
+                
+            except Exception as e:
+                if self.comboBox_port.currentText()=='':
+                    self.textEdit.appendPlainText('Insert port please!')
+                
+                self.textEdit.appendPlainText('Connection falied!\n'+str(e))   
+                
+            else:
+                self.textEdit.appendPlainText('Connection OK.................!\n\n\n')
+                self.textEdit.appendPlainText('Start dowload data.................!\n')
+                
                 r=open(str(self.lineEdit_save_raw.text()),'r')
                 lines = r.read().split(',')
-                self.textEdit.setText(str(lines))
+                self.textEdit.appendPlainText(str(lines))
             
-            except:
-                pass
-        
-        
+            
