@@ -70,10 +70,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         self.lineEdit_save_raw.textChanged.connect(self.connect)
         self.pushButton_connect.setEnabled(False)
     
-    def foo(w):
-        for i in tqdm(range(100), file=w):
-            time.sleep(0.1)
-    
+
     def connect(self):
         
         
@@ -84,12 +81,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         else:
             self.pushButton_connect.setEnabled(False)
     
-    def updateProgressBar(self, maxVal):
-        self.progressBar.setValue(self.progressBar.value() + maxVal)
-    
-        if maxVal == 0:
-            self.progressBar.setValue(100)
-    
+
     def tt(self):    
         if self.comboBox_model.currentIndex()!=6:
             
