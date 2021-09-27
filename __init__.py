@@ -40,7 +40,12 @@ try:
 
 except Exception as e:
     missing_libraries.append(str(e))
+try:
+    
+    import tqdm
 
+except Exception as e:
+    missing_libraries.append(str(e))
 install_libraries = []
 for l in missing_libraries:
     p = re.findall(r"'(.*?)'", l)

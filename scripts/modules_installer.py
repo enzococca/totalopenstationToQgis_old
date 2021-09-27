@@ -31,7 +31,8 @@ packages = sys.argv[1].split(',') if len(sys.argv) >= 2 else []
 
 if not packages:
     packages = [
-        'totalopenstation'
+        'totalopenstation',
+        'tqdm'
     ]
 
 python_path = sys.exec_prefix
