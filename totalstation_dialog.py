@@ -21,9 +21,11 @@
  *                                                                         *
  ***************************************************************************/
 """
-
+import io
 import os
 import time, sys
+import tqdm
+from tqdm import tqdm
 from time import sleep
 import threading
 import subprocess
@@ -46,41 +48,6 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'totalstation_dialog_base.ui'))
 
 
-class Progress:
-    def __init__(self, value, end, title='Downloading',buffer=20):
-        self.title = title
-        #when calling in a for loop it doesn't include the last number
-        self.end = end -1
-        self.buffer = buffer
-        self.value = value
-        self.progress()
-
-    def progress(self):
-        maped = int(interp(self.value, [0, self.end], [0, self.buffer]))
-        print(f'{self.title}: [{"#"*maped}{"-"*(self.buffer - maped)}]{self.value}/{self.end} {((self.value/self.end)*100):.2f}%', end='\r')
-
-
-class progressThread(QThread):
-
-    progress_update = QtCore.pyqtSignal(int) # or pyqtSignal(int)
-
-    def __init__(self):
-        QThread.__init__(self)
-
-    def __del__(self):
-        self.wait()
-
-
-    def run(self):
-        # your logic here
-        while 1:      
-            maxVal = 1 # NOTE THIS CHANGED to 1 since updateProgressBar was updating the value by 1 every time
-            self.progress_update.emit(maxVal) # self.emit(SIGNAL('PROGRESS'), maxVal)
-            # Tell the thread to sleep for 1 second and let other things run
-            time.sleep(1)
-
-
-
 class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
     
     
@@ -93,9 +60,6 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        self.progress_thread = progressThread()
-        #self.progress_thread.start()
-        self.progress_thread.progress_update.connect(self.updateProgressBar)
         self.model = QtGui.QStandardItemModel(self)
         self.tableView.setModel(self.model)
         self.toolButton_input.clicked.connect(self.setPathinput)
@@ -105,7 +69,11 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         self.comboBox_model.currentIndexChanged.connect(self.tt)
         self.lineEdit_save_raw.textChanged.connect(self.connect)
         self.pushButton_connect.setEnabled(False)
-        
+    
+    def foo(w):
+        for i in tqdm(range(100), file=w):
+            time.sleep(0.1)
+    
     def connect(self):
         
         
@@ -129,29 +97,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         else:
             
             self.mDockWidget.show()
-        #self.format_()
-    
-    # def format_(self):
-        # if self.comboBox_format.currentIndex()==0:
-            # return 'tsj'
-    
-        # if self.comboBox_format.currentText()==1:
-            # return 'gsi'
-    
-        # if self.comboBox_format.currentText()==4:
-            # return 'v200'
         
-        # if self.comboBox_format.currentText()==5:
-            # return 'sdr'
-    
-        # if self.comboBox_format.currentText()==6:
-            # return 'are'
-    
-        # if self.comboBox_format.currentText()==7 :
-            # return '*'
-    
-        # if self.comboBox_format.currentText()==9 :
-            # return 'rw5'
     def setPathinput(self):
         s = QgsSettings()
         input_ = QFileDialog.getOpenFileName(
@@ -165,12 +111,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
             self.lineEdit_input.setText(input_)
             s.setValue('',input_)
-            # r=open(self.lineEdit_input.text(),'r')
-            # lines = r.read().split(',')
-            # self.textEdit.setText(str(lines))
-    
-    
-    
+            
     def setPathoutput(self):
         s = QgsSettings()
         output_ = QFileDialog.getSaveFileName(
@@ -230,22 +171,11 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             try:#os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
                 p=subprocess.check_call(['python',cmd, '-i',str(self.lineEdit_input.text()),'-o',str(self.lineEdit_output.text()),'-f',self.comboBox_format.currentText(),'-t',self.comboBox_format2.currentText(),'--overwrite'], shell=True)
                 
-                self.updateProgressBar(p)
             except Exception as e:
                 
-                self.textEdit.append('Connection falied!')   
+                self.textEdit.appendPlainText(str(e))
                 
-            else:
-                self.textEdit.append('Connection OK.................!\n\n\n')
-                self.textEdit.append('Start dowload data.................!\n\n\n')
-                # sleep(1)
-                # self.textEdit.repaint()
-                for x in range(21):  #set to 21 to include until 20
-                    self.textEdit.append(str(Progress(x, 21)))
-                
-                self.textEdit.append('Dowload finished.................!\n\n\n')
-                self.textEdit.append('Result:\n')
-            #Load the layer if the format is geojson or dxf or csv           
+                   
             if self.comboBox_format2.currentIndex()== 0:
                 
                 layer = QgsVectorLayer(str(self.lineEdit_output.text()), 'totalopenstation', 'ogr')
@@ -295,9 +225,9 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 
                 
 
-                self.progressBar.reset()
+                
             else:
-                self.progressBar.reset()
+                
                 pass
         else:
             b=QgsApplication.qgisSettingsDirPath()
@@ -367,43 +297,31 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         if platform.system() == "Windows":
             b=QgsApplication.qgisSettingsDirPath().replace("/","\\")
             cmd = os.path.join(os.sep, b , 'python', 'plugins', 'totalopenstationToQgis', 'scripts', 'totalopenstation-cli-connector.py')
-            # cmd2=' -m'+'  '+self.comboBox_model.currentText()+'  '+'-p'+'  '+self.comboBox_port.currentText()+'  '+'-o'+'  '+str(self.lineEdit_save_raw.text())
-            # os.system("start cmd /k" + ' python ' +cmd+' '+cmd2)
-            #c=''
+            
             try:
                 c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',str(self.lineEdit_save_raw.text())], shell=True)
                 
-                self.updateProgressBar(c)
-                layer = QgsVectorLayer(str(self.lineEdit_save_raw.text()), 'totalopenstation', 'ogr')
-                    
-                layer.isValid() 
-
-                
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            
-                self.progressBar.reset()
                 
                 
             except Exception as e:
                 if self.comboBox_port.currentText()=='':
-                    self.textEdit.append('Insert port please!')
+                    self.textEdit.appendPlainText('Insert port please!')
                 
-                self.textEdit.append('Connection falied!')   
+                self.textEdit.appendPlainText('Connection falied!')   
                 
             else:
-                self.textEdit.append('Connection OK.................!\n\n\n')
-                self.textEdit.append('Start dowload data.................!\n\n\n')
-                for x in range(21):  #set to 21 to include until 20
-                    self.textEdit.append(Progress(x, 21))
+                self.textEdit.appendPlainText('Connection OK.................!\n\n')
+                self.textEdit.appendPlainText('Start dowload data.................!\n\n')
+                s = io.StringIO()
+                for i in tqdm(range(3), file=s):    
+                    sleep(.1)
+                self.textEdit.appendPlainText(s.getvalue())
                 
-                self.textEdit.append('Dowload finished.................!\n\n\n')
-                self.textEdit.append('Result:\n')
+                self.textEdit.appendPlainText('Dowload finished.................!\n\n')
+                self.textEdit.appendPlainText('Result:\n')
                 r=open(str(self.lineEdit_save_raw.text()),'r')
                 lines = r.read().split(',')
-                self.textEdit.append(str(lines))
+                self.textEdit.appendPlainText(str(lines))
             
         else:
             b=QgsApplication.qgisSettingsDirPath()
@@ -411,28 +329,26 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             #os.system("start cmd /k" + ' python ' +cmd)
             try:
                 c=subprocess.check_call(['python', cmd,'-m',self.comboBox_model.currentText(),'-p',self.comboBox_port.currentText(),'-o',str(self.lineEdit_save_raw.text())], shell=True)
-                self.updateProgressBar(c)
-                if self.comboBox_model.currentText()=='':
-                    self.textEdit.setText('insert port please!')
-                if c!=0:
-                    self.textEdit.setText('connessione fallita!')
-            
-                layer = QgsVectorLayer(str(self.lineEdit_save_raw.text()), 'totalopenstation', 'ogr')
-                    
-                layer.isValid() 
-
                 
-                QgsProject.instance().addMapLayer(layer)
-
-                QMessageBox.warning(self, 'Total Open Station luncher',
-                                          'data loaded into panel Layer', QMessageBox.Ok)
-            
-                self.progressBar.reset()
+                
+                
+            except Exception as e:
+                if self.comboBox_port.currentText()=='':
+                    self.textEdit.appendPlainText('Insert port please!')
+                
+                self.textEdit.appendPlainText('Connection falied!')   
+                
+            else:
+                self.textEdit.appendPlainText('Connection OK.................!\n\n\n')
+                self.textEdit.appendPlainText('Start dowload data.................!\n\n\n')
+                s = io.StringIO()
+                for i in tqdm(range(3), file=s):    
+                    sleep(.1)
+                self.textEdit.appendPlainTextPlainText(s.getvalue())
+                
+                self.textEdit.appendPlainText('Dowload finished.................!\n\n\n')
+                self.textEdit.appendPlainText('Result:\n')
                 r=open(str(self.lineEdit_save_raw.text()),'r')
                 lines = r.read().split(',')
-                self.textEdit.setText(str(lines))
-            
-            except:
-                pass
-        
+                self.textEdit.appendPlainText(str(lines))
         
