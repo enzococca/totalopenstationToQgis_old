@@ -134,14 +134,18 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
     
     def loadCsv(self, fileName):
         self.tableView.clearSpans()
+        
         with open(fileName, "r") as fileInput:
             for row in csv.reader(fileInput):    
+                
                 items = [
                     QtGui.QStandardItem(field)
                     for field in row
                 ]
                 self.model.appendRow(items)
-    
+                
+               
+                
     def delete(self):
         if self.tableView.selectionModel().hasSelection():
             indexes =[QPersistentModelIndex(index) for index in self.tableView.selectionModel().selectedRows()]
