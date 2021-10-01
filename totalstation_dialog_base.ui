@@ -500,11 +500,6 @@
        </item>
        <item>
         <property name="text">
-         <string>sokkia_sdr33_rku_630</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>trimble_are</string>
         </property>
        </item>

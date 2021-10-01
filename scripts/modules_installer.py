@@ -31,7 +31,7 @@ packages = sys.argv[1].split(',') if len(sys.argv) >= 2 else []
 
 if not packages:
     packages = [
-        'totalopenstation',
+        'https://github.com/enzococca/totalopenstation/zipball/main',
         'tqdm'
     ]
 
@@ -49,8 +49,8 @@ else:
 
 for p in packages:
     try:
-        subprocess.check_call(['python','-m','pip', 'install',  p ], shell=True)
+        subprocess.check_call(['python','-m','pip', 'install',  '--upgrade', p ], shell=True)
     except:
         pass
     else:
-        subprocess.check_call([cmd,'-m','pip', 'install',  p ], shell=False)
+        subprocess.check_call([cmd,'-m','pip', 'install', '--upgrade', p ], shell=False)
