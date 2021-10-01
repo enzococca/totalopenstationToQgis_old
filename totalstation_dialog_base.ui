@@ -500,6 +500,11 @@
        </item>
        <item>
         <property name="text">
+         <string>trimble_dc</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>trimble_are</string>
         </property>
        </item>
