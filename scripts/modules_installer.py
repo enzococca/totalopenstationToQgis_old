@@ -49,8 +49,8 @@ else:
 
 for p in packages:
     try:
-        subprocess.check_call(['python','-m','pip', 'install',  '--upgrade', p ], shell=True)
+        subprocess.check_call(['python','-m','pip', 'install', p ], shell=True)
     except:
         pass
     else:
-        subprocess.check_call([cmd,'-m','pip', 'install', '--upgrade', p ], shell=False)
+        subprocess.check_call([cmd,'-m','pip', 'install', p ], shell=False)
