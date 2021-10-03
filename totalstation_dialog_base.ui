@@ -470,6 +470,11 @@
        </item>
        <item>
         <property name="text">
+         <string>topcon_gpt</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>landxml</string>
         </property>
        </item>
