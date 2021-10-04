@@ -219,10 +219,10 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                     self.loadCsv(str(self.lineEdit_output.text()))
                     
-                    ##copy anpast from totalstation to pyarchinit###############
+                    ##copy and past from totalstation to pyarchinit###############
                     sourceLYR = QgsProject.instance().mapLayersByName('totalopenstation Pyarchinit Quote')[0]
                     destLYR = QgsProject.instance().mapLayersByName('Quote US disegno')[0]
-                    #Dialog Box for input "ID del Predio" to select it...
+                    #Dialog Box for input "name sito archeologico" to select it...
                     ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
                     Sito = str(ID_Sito [0])
                     ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
@@ -241,11 +241,6 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     data_provider.addFeatures(features)
                     iface.mapCanvas().zoomToSelected()
                     destLYR.commitChanges()
-                    # params = {'SOURCE_LAYER': sourceLYR, 
-                              # 'TARGET_LAYER': destLYR,
-                              # 'ACTION_ON_DUPLICATE' : 1}  # 0: Just append all features
-
-                    # processing.run("etl_load:appendfeaturestolayer", params)
                     
                     QgsProject.instance().removeMapLayer(sourceLYR)
                     ###########finish############################################
@@ -334,7 +329,31 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 
 
                     self.loadCsv(str(self.lineEdit_output.text()))
-                
+                    ##copy and past from totalstation to pyarchinit###############
+                    sourceLYR = QgsProject.instance().mapLayersByName('totalopenstation Pyarchinit Quote')[0]
+                    destLYR = QgsProject.instance().mapLayersByName('Quote US disegno')[0]
+                    #Dialog Box for input "name sito archeologico" to select it...
+                    ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
+                    Sito = str(ID_Sito [0])
+                    ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
+                    Disegnatore = str(ID_Disegnatore [0])
+                    features = []
+                    for feature in sourceLYR.getFeatures():
+                        features.append(feature)
+                        feature.setAttribute('sito_q', Sito)
+                        feature.setAttribute('area_q', '1')
+                        feature.setAttribute('x', str(date.today().isoformat()))
+                        feature.setAttribute('y', Disegnatore)
+                        #i += 1
+                        sourceLYR.updateFeature(feature)
+                    destLYR.startEditing()
+                    data_provider = destLYR.dataProvider()
+                    data_provider.addFeatures(features)
+                    iface.mapCanvas().zoomToSelected()
+                    destLYR.commitChanges()
+                    
+                    QgsProject.instance().removeMapLayer(sourceLYR)
+                    ###########finish############################################
                 elif self.comboBox_format2.currentIndex()== 3:
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
                     layer1 = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
