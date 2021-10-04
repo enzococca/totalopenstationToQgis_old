@@ -27,6 +27,7 @@ import time, sys
 import tqdm
 from tqdm import tqdm
 from time import sleep
+from datetime import date
 import threading
 import subprocess
 import platform
@@ -35,7 +36,7 @@ import tempfile
 from qgis.PyQt import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import  *
-from qgis.PyQt.QtWidgets import QVBoxLayout, QApplication, QDialog, QMessageBox, QFileDialog,QLineEdit,QWidget,QCheckBox,QProgressBar
+from qgis.PyQt.QtWidgets import QVBoxLayout, QApplication, QDialog, QMessageBox, QFileDialog,QLineEdit,QWidget,QCheckBox,QProgressBar,QInputDialog
 from qgis.PyQt.QtSql import *
 from qgis.PyQt.uic import loadUiType
 from qgis.PyQt import  QtWidgets 
@@ -43,6 +44,7 @@ from qgis.core import  *
 from qgis.gui import  *
 from qgis.utils import iface
 from numpy import interp
+import processing
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'totalstation_dialog_base.ui'))
@@ -204,14 +206,59 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 
                 elif self.comboBox_format2.currentIndex()== 2:
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
-                    layer = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
+                    layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Quote", "delimitedtext")
                     
                     layer.isValid() 
 
                     
                     QgsProject.instance().addMapLayer(layer)
 
-                    QMessageBox.warning(self, 'Total Open Station luncher',
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
+                
+
+                    self.loadCsv(str(self.lineEdit_output.text()))
+                    
+                    ##copy anpast from totalstation to pyarchinit###############
+                    sourceLYR = QgsProject.instance().mapLayersByName('totalopenstation Pyarchinit Quote')[0]
+                    destLYR = QgsProject.instance().mapLayersByName('Quote US disegno')[0]
+                    #Dialog Box for input "ID del Predio" to select it...
+                    ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
+                    Sito = str(ID_Sito [0])
+                    ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
+                    Disegnatore = str(ID_Disegnatore [0])
+                    features = []
+                    for feature in sourceLYR.getFeatures():
+                        features.append(feature)
+                        feature.setAttribute('sito_q', Sito)
+                        feature.setAttribute('area_q', '1')
+                        feature.setAttribute('x', str(date.today().isoformat()))
+                        feature.setAttribute('y', Disegnatore)
+                        #i += 1
+                        sourceLYR.updateFeature(feature)
+                    destLYR.startEditing()
+                    data_provider = destLYR.dataProvider()
+                    data_provider.addFeatures(features)
+                    iface.mapCanvas().zoomToSelected()
+                    destLYR.commitChanges()
+                    # params = {'SOURCE_LAYER': sourceLYR, 
+                              # 'TARGET_LAYER': destLYR,
+                              # 'ACTION_ON_DUPLICATE' : 1}  # 0: Just append all features
+
+                    # processing.run("etl_load:appendfeaturestolayer", params)
+                    
+                    QgsProject.instance().removeMapLayer(sourceLYR)
+                    ###########finish############################################
+                elif self.comboBox_format2.currentIndex()== 3:
+                    uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
+                    layer1 = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
+                    
+                    #layer.isValid() 
+
+                    
+                    QgsProject.instance().addMapLayer(layer1)
+
+                    QMessageBox.warning(self, 'Total Open Station',
                                               'data loaded into panel Layer', QMessageBox.Ok)
                 
 
@@ -268,9 +315,14 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     lines = r.read().split(',')
                     self.textEdit.setText(str(lines))                          
                 
+                
+                    
+                
+                    
+                    
                 elif self.comboBox_format2.currentIndex()== 2:
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
-                    layer = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
+                    layer = QgsVectorLayer(uri, layer.name(), "delimitedtext")
                     
                     layer.isValid() 
 
@@ -282,9 +334,22 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 
 
                     self.loadCsv(str(self.lineEdit_output.text()))
+                
+                elif self.comboBox_format2.currentIndex()== 3:
+                    uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
+                    layer1 = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
                     
-                    
+                    #layer.isValid() 
 
+                    
+                    QgsProject.instance().addMapLayer(layer1)
+
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
+                
+
+                    self.loadCsv(str(self.lineEdit_output.text()))
+                
                 
                 else:
                     pass
@@ -294,6 +359,10 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 
                 QMessageBox.warning(self, 'Total Open Station',
                                           "Error:\n"+str(e), QMessageBox.Ok)
+    
+    def rmvLyr(lyrname):
+        qinst = QgsProject.instance()
+        qinst.removeMapLayer(qinst.mapLayersByName(lyrname)[0].id())
     def on_pushButton_connect_pressed(self):
         self.textEdit.clear()
             

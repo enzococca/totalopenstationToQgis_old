@@ -28,7 +28,7 @@
    <item row="0" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="Connection">
       <attribute name="icon">
@@ -435,6 +435,11 @@
        </item>
        <item>
         <property name="text">
+         <string>csv pyarchinit</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>csv</string>
         </property>
        </item>
@@ -654,12 +659,12 @@
    <slot>setText(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>457</x>
-     <y>124</y>
+     <x>509</x>
+     <y>114</y>
     </hint>
     <hint type="destinationlabel">
-     <x>550</x>
-     <y>129</y>
+     <x>602</x>
+     <y>114</y>
     </hint>
    </hints>
   </connection>
