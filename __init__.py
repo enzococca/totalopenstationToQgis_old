@@ -58,8 +58,8 @@ if install_libraries:
     from qgis.PyQt.QtWidgets import QMessageBox
     if L=='it':
         res = QMessageBox.warning(None, 'Total Open Station ',
-                              "Se vedi questo messaggio significa che il pacchetto totalopenstation non è installato:\n\n"
-                              "Vuoi installarlo? Ricordati che se hai installato QGIS standalone è necessario avviare QGIS come Admin", QMessageBox.Ok | QMessageBox.Cancel)
+                              "Se vedi questo messaggio significa che il pacchetto totalopenstation deve essere installato\aggiornato\n\n"
+                              "alla versione modificata. clicca ok per installare", QMessageBox.Ok | QMessageBox.Cancel)
     
     else:
         res = QMessageBox.warning(None, 'Total Open Station ',
