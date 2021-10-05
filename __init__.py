@@ -38,7 +38,7 @@ try:
     
     import pkg_resources
 
-    pkg_resources.require("totalopenstation==0.5.2.1")
+    pkg_resources.require("totalopenstation==0.5.2_dev_enzo")
     
 
 except Exception as e:
