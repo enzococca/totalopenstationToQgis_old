@@ -36,7 +36,10 @@ L=QgsSettings().value("locale/userLocale")[0:2]
 missing_libraries = []
 try:
     
-    import totalopenstation
+    import pkg_resources
+
+    pkg_resources.require("totalopenstation==0.5.2.1")
+    
 
 except Exception as e:
     missing_libraries.append(str(e))

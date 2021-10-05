@@ -27,14 +27,6 @@ packages = sys.argv[1].split(',') if len(sys.argv) >= 2 else []
 
 # Adding the dependencies python modules in
 # package list in order to install via pip module
-
-
-if not packages:
-    packages = [
-        'https://github.com/enzococca/totalopenstation/zipball/main',
-        'tqdm'
-    ]
-
 python_path = sys.exec_prefix
 python_version = sys.version[:3]
 
@@ -44,6 +36,21 @@ elif platform.system()=='Darwin':
     cmd = '{}/bin/python{}'.format(python_path, python_version)
 else:
     cmd = '{}/bin/python{}'.format(python_path, python_version)
+try:
+    subprocess.check_call(['python','-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main'], shell=True)
+except:
+    pass
+else:
+    subprocess.check_call([cmd,'-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main' ], shell=False)
+
+if not packages:
+    
+
+    packages = [
+        #'https://github.com/enzococca/totalopenstation/zipball/main',
+        'tqdm'
+    ]
+
 
 # install pip if it is not found
 
