@@ -28,7 +28,7 @@ import tqdm
 from tqdm import tqdm
 from time import sleep
 from datetime import date
-import threading
+import pandas as pd
 import subprocess
 import platform
 import csv
@@ -228,6 +228,10 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
                     Disegnatore = str(ID_Disegnatore [0])
                     features = []
+
+
+
+
                     for feature in sourceLYR.getFeatures():
                         features.append(feature)
                         feature.setAttribute('sito_q', Sito)
