@@ -28,7 +28,6 @@ import tqdm
 from tqdm import tqdm
 from time import sleep
 from datetime import date
-import pandas as pd
 import subprocess
 import platform
 import csv
