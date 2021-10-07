@@ -178,7 +178,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
     def convert_csv(self):
         df = pd.read_csv(str(self.lineEdit_output.text()))
         df[['area_q', 'us_q']] = df['us_q'].str.split('-', expand=True)
-        df.to_csv(str(self.lineEdit_output.text()), encoding='utf-8')
+        df.to_csv(str(self.lineEdit_output.text()), encoding='utf-8', index=False)
         #return a
     def on_pushButton_export_pressed(self):
 
@@ -230,7 +230,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 elif self.comboBox_format2.currentIndex()== 2:
 
                     self.convert_csv()
-                    uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
+                    uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=yes&subsetIndex=yes&watchFile=no"
                     layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Quote", "delimitedtext")
 
 
