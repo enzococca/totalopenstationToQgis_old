@@ -39,25 +39,6 @@ else:
 try:
     subprocess.check_call(['python','-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main'], shell=True)
 except:
-    pass
-else:
     subprocess.check_call([cmd,'-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main' ], shell=False)
-
-if not packages:
-    
-
-    packages = [
-        #'https://github.com/enzococca/totalopenstation/zipball/main',
-        'tqdm'
-    ]
-
-
-# install pip if it is not found
-
-for p in packages:
-    try:
-        subprocess.check_call(['python','-m','pip', 'install', p ], shell=True)
-    except:
-        pass
-    else:
-        subprocess.check_call([cmd,'-m','pip', 'install', p ], shell=False)
+else:
+    pass

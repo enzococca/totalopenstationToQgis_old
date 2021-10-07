@@ -43,30 +43,14 @@ try:
 
 except Exception as e:
     missing_libraries.append(str(e))
-try:
-    
-    import tqdm
 
-except Exception as e:
-    missing_libraries.append(str(e))
 install_libraries = []
 for l in missing_libraries:
     p = re.findall(r"'(.*?)'", l)
     install_libraries.append(p[0])
 
 if install_libraries:
-    from qgis.PyQt.QtWidgets import QMessageBox
-    # if L=='it':
-    #     res = QMessageBox.warning(None, 'Total Open Station ',
-    #                           "Se vedi questo messaggio significa che il pacchetto totalopenstation deve essere installato\aggiornato\n\n"
-    #                           "alla versione modificata. clicca ok per installare", QMessageBox.Ok | QMessageBox.Cancel)
-    #
-    # else:
-    #     res = QMessageBox.warning(None, 'Total Open Station ',
-    #                           "If you see this message it means the required package totalopenstation is missing from your machine:\n\n"
-    #                           "Do you want install the missing package? Remember you need start QGIS like Admin", QMessageBox.Ok | QMessageBox.Cancel)
-    # if res == QMessageBox.Ok:
-        
+
 
     python_path = sys.exec_prefix
     python_version = sys.version[:3]

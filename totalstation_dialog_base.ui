@@ -61,36 +61,6 @@
          <property name="currentText">
           <string/>
          </property>
-         <item>
-          <property name="text">
-           <string/>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>COM3</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>COM4</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>COM5</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>/dev/ttyUSB0</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>/dev/ttyS0</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="3" column="2">
@@ -391,10 +361,20 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="3">
+        <widget class="QPushButton" name="pushButton_check_port">
+         <property name="text">
+          <string>check port</string>
+         </property>
+        </widget>
+       </item>
        <item row="4" column="0" colspan="4">
         <widget class="QPlainTextEdit" name="textEdit">
          <property name="tabChangesFocus">
           <bool>true</bool>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QPlainTextEdit::WidgetWidth</enum>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -670,6 +650,86 @@
     <hint type="destinationlabel">
      <x>602</x>
      <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TotalopenstationDialogBase</sender>
+   <signal>rejected()</signal>
+   <receiver>textEdit</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>646</x>
+     <y>5</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>573</x>
+     <y>494</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TotalopenstationDialogBase</sender>
+   <signal>rejected()</signal>
+   <receiver>lineEdit_save_raw</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>471</x>
+     <y>2</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>457</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TotalopenstationDialogBase</sender>
+   <signal>rejected()</signal>
+   <receiver>lineEdit_input</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>337</x>
+     <y>2</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>92</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TotalopenstationDialogBase</sender>
+   <signal>rejected()</signal>
+   <receiver>lineEdit_output</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>493</x>
+     <y>2</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>487</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TotalopenstationDialogBase</sender>
+   <signal>rejected()</signal>
+   <receiver>tableView</receiver>
+   <slot>reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>389</x>
+     <y>3</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>381</x>
+     <y>289</y>
     </hint>
    </hints>
   </connection>

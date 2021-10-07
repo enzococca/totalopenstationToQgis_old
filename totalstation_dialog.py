@@ -24,14 +24,14 @@
 import io
 import os
 import time, sys
-import tqdm
-from tqdm import tqdm
+
 from time import sleep
 from datetime import date
 import subprocess
 import platform
 import csv
 import tempfile
+import textwrap as tr
 from qgis.PyQt import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import  *
@@ -70,7 +70,6 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         self.comboBox_model.currentIndexChanged.connect(self.tt)
         self.lineEdit_save_raw.textChanged.connect(self.connect)
         self.pushButton_connect.setEnabled(False)
-    
 
     def connect(self):
         
@@ -155,7 +154,31 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                 self.model.removeRow(index.row())
     
 
-    
+    def check_port(self):
+
+        p = subprocess.Popen( 'python -m serial.tools.list_ports',stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+
+
+
+        output, error = p.communicate(str.encode("utf-8"))
+        output = output.decode('utf-8').splitlines()
+        #error= error.decode('utf-8').splitlines()
+        return output
+
+    def listtostr(self):
+
+        str1 = ""
+
+        # traverse in the string
+        for ele in self.check_port():
+            str1 += ele
+        return str1
+    def on_pushButton_check_port_pressed(self):
+        self.textEdit.appendPlainText('Wait a moment....')
+        lines = tr.wrap(str(self.listtostr()), width=10)
+        #self.textEdit.clear()
+        self.textEdit.appendPlainText('Ports found:\n'+str(lines))
+        self.comboBox_port.addItems(lines)
     def on_pushButton_export_pressed(self):
         
         self.delete()
@@ -406,10 +429,10 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             else:
                 self.textEdit.appendPlainText('Connection OK.................!\n\n')
                 self.textEdit.appendPlainText('Start dowload data.................!\n\n')
-                s = io.StringIO()
-                for i in tqdm(range(3), file=s):    
-                    sleep(.1)
-                self.textEdit.appendPlainText(s.getvalue())
+                #s = io.StringIO()
+                #for i in tqdm(range(3), file=s):
+                    #sleep(.1)
+                #self.textEdit.appendPlainText(s.getvalue())
                 
                 self.textEdit.appendPlainText('Dowload finished.................!\n\n')
                 self.textEdit.appendPlainText('Result:\n')
@@ -435,10 +458,10 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
             else:
                 self.textEdit.appendPlainText('Connection OK.................!\n\n\n')
                 self.textEdit.appendPlainText('Start dowload data.................!\n\n\n')
-                s = io.StringIO()
-                for i in tqdm(range(3), file=s):    
-                    sleep(.1)
-                self.textEdit.appendPlainTextPlainText(s.getvalue())
+                #s = io.StringIO()
+                #for i in tqdm(range(3), file=s):
+                    #sleep(.1)
+                #self.textEdit.appendPlainTextPlainText(s.getvalue())
                 
                 self.textEdit.appendPlainText('Dowload finished.................!\n\n\n')
                 self.textEdit.appendPlainText('Result:\n')
