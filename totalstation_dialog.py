@@ -24,6 +24,7 @@
 
 import os
 from datetime import date
+import pandas as pd
 import subprocess
 import platform
 import csv
@@ -174,6 +175,11 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         #self.textEdit.clear()
         self.textEdit.appendPlainText('Ports found:\n'+str(lines))
         self.comboBox_port.addItems(lines)
+    def convert_csv(self):
+        df = pd.read_csv(str(self.lineEdit_output.text()))
+        df[['area_q', 'us_q']] = df['us_q'].str.split('-', expand=True)
+        df.to_csv(str(self.lineEdit_output.text()), encoding='utf-8')
+        #return a
     def on_pushButton_export_pressed(self):
         
         self.delete()
@@ -222,10 +228,13 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     self.loadCsv('test.csv')                     
                 
                 elif self.comboBox_format2.currentIndex()== 2:
+
+                    self.convert_csv()
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
                     layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Quote", "delimitedtext")
-                    
-                    layer.isValid() 
+
+
+                    layer.isValid()
 
                     
                     QgsProject.instance().addMapLayer(layer)
@@ -243,19 +252,16 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     destLYR = QgsProject.instance().mapLayersByName('Quote US disegno')[0]
                     #Dialog Box for input "name sito archeologico" to select it...
                     ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
-                    Sito = str(ID_Sito [0])
+                    Sito = str(ID_Sito[0])
+                    ID_M = QInputDialog.getText(None, 'Unità di misura', 'Input tipo di unità di misura\n (ex: metri)')
+                    Misura = str(ID_M[0])
                     ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
-                    Disegnatore = str(ID_Disegnatore [0])
+                    Disegnatore = str(ID_Disegnatore[0])
                     features = []
-
-
-
-
-
                     for feature in sourceLYR.getFeatures():
                         features.append(feature)
                         feature.setAttribute('sito_q', Sito)
-                        feature.setAttribute('area_q', '1')
+                        feature.setAttribute('unita_misu_q', Misura)
                         feature.setAttribute('x', str(date.today().isoformat()))
                         feature.setAttribute('y', Disegnatore)
                         #i += 1
@@ -332,14 +338,10 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                                               
                     r=open(str(self.lineEdit_output.text()),'r')
                     lines = r.read().split(',')
-                    self.textEdit.setText(str(lines))                          
-                
-                
-                    
-                
-                    
+                    self.textEdit.setText(str(lines))
                     
                 elif self.comboBox_format2.currentIndex()== 2:
+                    self.convert_csv()
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
                     layer = QgsVectorLayer(uri, layer.name(), "delimitedtext")
                     
@@ -350,7 +352,6 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                     QMessageBox.warning(self, 'Total Open Station',
                                               'data loaded into panel Layer', QMessageBox.Ok)
-                
 
                     self.loadCsv(str(self.lineEdit_output.text()))
                     ##copy and past from totalstation to pyarchinit###############
@@ -359,13 +360,15 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     #Dialog Box for input "name sito archeologico" to select it...
                     ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
                     Sito = str(ID_Sito [0])
+                    ID_M = QInputDialog.getText(None, 'Unità di misura', 'Input tipo di unità di misura\n (ex: metri)')
+                    Misura = str(ID_M[0])
                     ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
                     Disegnatore = str(ID_Disegnatore [0])
                     features = []
                     for feature in sourceLYR.getFeatures():
                         features.append(feature)
                         feature.setAttribute('sito_q', Sito)
-                        feature.setAttribute('area_q', '1')
+                        feature.setAttribute('unita_misu_q', Misura)
                         feature.setAttribute('x', str(date.today().isoformat()))
                         feature.setAttribute('y', Disegnatore)
                         #i += 1
@@ -375,7 +378,6 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     data_provider.addFeatures(features)
                     iface.mapCanvas().zoomToSelected()
                     destLYR.commitChanges()
-                    
                     QgsProject.instance().removeMapLayer(sourceLYR)
                     ###########finish############################################
                 elif self.comboBox_format2.currentIndex()== 3:
