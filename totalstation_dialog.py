@@ -176,10 +176,12 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
         self.textEdit.appendPlainText('Ports found:\n'+str(lines))
         self.comboBox_port.addItems(lines)
     def convert_csv(self):
-        df = pd.read_csv(str(self.lineEdit_output.text()))
-        df[['area_q', 'us_q']] = df['us_q'].str.split('-', expand=True)
-        df.to_csv(str(self.lineEdit_output.text()), encoding='utf-8', index=False)
-        #return a
+        try:
+            df = pd.read_csv(str(self.lineEdit_output.text()))
+            df[['area_q', 'us_q']] = df['us_q'].str.split('-', expand=True)
+            df.to_csv(str(self.lineEdit_output.text()), encoding='utf-8', index=False)
+        except:
+            pass
     def on_pushButton_export_pressed(self):
 
         self.delete()
@@ -277,10 +279,100 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     ###########finish############################################
 
 
-
-
-
                 elif self.comboBox_format2.currentIndex()== 3:
+
+
+                    uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=yes&subsetIndex=yes&watchFile=no"
+                    layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit riferimento", "delimitedtext")
+
+
+                    layer.isValid()
+
+
+                    QgsProject.instance().addMapLayer(layer)
+
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
+
+
+                    self.loadCsv(str(self.lineEdit_output.text()))
+
+
+
+                    '''copy and past from totalstation to pyarchinit'''
+                    sourceLYR = QgsProject.instance().mapLayersByName('totalopenstation Pyarchinit riferimento')[0]
+                    destLYR = QgsProject.instance().mapLayersByName('Punti di riferimento')[0]
+                    #Dialog Box for input "name sito archeologico" to select it...
+                    ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
+                    Sito = str(ID_Sito[0])
+
+
+                    features = []
+                    for feature in sourceLYR.getFeatures():
+                        features.append(feature)
+                        feature.setAttribute('sito', Sito)
+
+                        #feature.setAttribute('x', str(date.today().isoformat()))
+                        #feature.setAttribute('y', Disegnatore)
+                        #i += 1
+                        sourceLYR.updateFeature(feature)
+                    destLYR.startEditing()
+                    data_provider = destLYR.dataProvider()
+                    data_provider.addFeatures(features)
+                    iface.mapCanvas().zoomToSelected()
+                    destLYR.commitChanges()
+
+
+                    QgsProject.instance().removeMapLayer(sourceLYR)
+                    ###########finish############################################
+
+
+                elif self.comboBox_format2.currentIndex()== 4:
+
+                    self.convert_csv()
+                    uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=yes&subsetIndex=yes&watchFile=no"
+                    layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Sample", "delimitedtext")
+
+
+                    layer.isValid()
+
+
+                    QgsProject.instance().addMapLayer(layer)
+
+                    QMessageBox.warning(self, 'Total Open Station',
+                                              'data loaded into panel Layer', QMessageBox.Ok)
+
+
+                    self.loadCsv(str(self.lineEdit_output.text()))
+
+
+
+                    '''copy and past from totalstation to pyarchinit'''
+                    sourceLYR = QgsProject.instance().mapLayersByName('totalopenstation Pyarchinit Sample')[0]
+                    destLYR = QgsProject.instance().mapLayersByName('Punti di campionatura')[0]
+                    #Dialog Box for input "name sito archeologico" to select it...
+                    ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
+                    Sito = str(ID_Sito[0])
+
+                    features = []
+                    for feature in sourceLYR.getFeatures():
+                        features.append(feature)
+                        feature.setAttribute('sito', Sito)
+
+                        #i += 1
+                        sourceLYR.updateFeature(feature)
+                    destLYR.startEditing()
+                    data_provider = destLYR.dataProvider()
+                    data_provider.addFeatures(features)
+                    iface.mapCanvas().zoomToSelected()
+                    destLYR.commitChanges()
+
+
+                    QgsProject.instance().removeMapLayer(sourceLYR)
+                    ###########finish############################################
+
+
+                elif self.comboBox_format2.currentIndex()== 5:
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
                     layer1 = QgsVectorLayer(uri, 'totalopenstation', "delimitedtext")
 

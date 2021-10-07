@@ -420,7 +420,17 @@
        </item>
        <item>
         <property name="text">
-         <string>csv pyarchinit</string>
+         <string>csv pyarchinit_us</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>csv pyarchinit_rif</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>csv pyarchinit_sample</string>
         </property>
        </item>
        <item>
