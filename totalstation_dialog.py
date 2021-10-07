@@ -21,11 +21,8 @@
  *                                                                         *
  ***************************************************************************/
 """
-import io
-import os
-import time, sys
 
-from time import sleep
+import os
 from datetime import date
 import subprocess
 import platform
@@ -37,13 +34,11 @@ from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import  *
 from qgis.PyQt.QtWidgets import QVBoxLayout, QApplication, QDialog, QMessageBox, QFileDialog,QLineEdit,QWidget,QCheckBox,QProgressBar,QInputDialog
 from qgis.PyQt.QtSql import *
-from qgis.PyQt.uic import loadUiType
-from qgis.PyQt import  QtWidgets 
+from qgis.PyQt import  QtWidgets
 from qgis.core import  *
 from qgis.gui import  *
 from qgis.utils import iface
-from numpy import interp
-import processing
+
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'totalstation_dialog_base.ui'))
@@ -237,10 +232,12 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                     QMessageBox.warning(self, 'Total Open Station',
                                               'data loaded into panel Layer', QMessageBox.Ok)
-                
+
 
                     self.loadCsv(str(self.lineEdit_output.text()))
-                    
+
+
+
                     ##copy and past from totalstation to pyarchinit###############
                     sourceLYR = QgsProject.instance().mapLayersByName('totalopenstation Pyarchinit Quote')[0]
                     destLYR = QgsProject.instance().mapLayersByName('Quote US disegno')[0]
@@ -250,6 +247,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
                     Disegnatore = str(ID_Disegnatore [0])
                     features = []
+
 
 
 
