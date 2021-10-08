@@ -330,6 +330,11 @@
            <string>custom_bluetooth</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>geomax</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="2" column="2">
@@ -465,17 +470,7 @@
        </property>
        <item>
         <property name="text">
-         <string>topcon_gts</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>topcon_gpt</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>landxml</string>
+         <string>geomax_gsi</string>
         </property>
        </item>
        <item>
@@ -495,7 +490,12 @@
        </item>
        <item>
         <property name="text">
-         <string>nikon_raw_v200</string>
+         <string>topcon_gts</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>topcon_gpt</string>
         </property>
        </item>
        <item>
@@ -515,12 +515,22 @@
        </item>
        <item>
         <property name="text">
+         <string>nikon_raw_v200</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>zeiss_r5</string>
         </property>
        </item>
        <item>
         <property name="text">
          <string>zeiss_rec_500</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>landxml</string>
         </property>
        </item>
       </widget>

@@ -312,9 +312,6 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                         features.append(feature)
                         feature.setAttribute('sito', Sito)
 
-                        #feature.setAttribute('x', str(date.today().isoformat()))
-                        #feature.setAttribute('y', Disegnatore)
-                        #i += 1
                         sourceLYR.updateFeature(feature)
                     destLYR.startEditing()
                     data_provider = destLYR.dataProvider()
@@ -329,7 +326,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                 elif self.comboBox_format2.currentIndex()== 4:
 
-                    self.convert_csv()
+
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=yes&subsetIndex=yes&watchFile=no"
                     layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Sample", "delimitedtext")
 
