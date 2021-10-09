@@ -18,10 +18,16 @@
     <normaloff>:/plugins/totalopenstationToQgis/icon.png</normaloff>:/plugins/totalopenstationToQgis/icon.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <widget class="QProgressBar" name="progressBar">
-     <property name="value">
-      <number>0</number>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="pushButton_export">
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Process</string>
      </property>
     </widget>
    </item>
@@ -475,6 +481,11 @@
        </item>
        <item>
         <property name="text">
+         <string>geomax_txt</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>leica_gsi</string>
         </property>
        </item>
@@ -614,16 +625,20 @@
      </widget>
     </widget>
    </item>
+   <item row="2" column="0">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="1">
-    <widget class="QPushButton" name="pushButton_export">
-     <property name="maximumSize">
-      <size>
-       <width>100</width>
-       <height>16777215</height>
-      </size>
+    <widget class="QCheckBox" name="checkBox_coord">
+     <property name="enabled">
+      <bool>false</bool>
      </property>
      <property name="text">
-      <string>Process</string>
+      <string>CheckBox coord</string>
      </property>
     </widget>
    </item>

@@ -305,13 +305,28 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     #Dialog Box for input "name sito archeologico" to select it...
                     ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
                     Sito = str(ID_Sito[0])
-
+                    # if self.checkBox_coord.isChecked():
+                    #     #ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
+                    #     #x = int(ID_X[0])
+                    #     #ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
+                    #     #y = int(ID_Y[0])
+                    #     ID_Z = QInputDialog.getText(None, 'Z', 'Input Elevation')
+                    #     q = int(ID_Z[0])
+                    #
+                    #
+                    #     features = []
+                    #
+                    #     for feature in sourceLYR.getFeatures():
+                    #         features.append(feature)
+                    #         feature.setAttribute('sito', Sito)
+                    #
+                    #         sourceLYR.updateFeature(feature)
+                    # else:
 
                     features = []
                     for feature in sourceLYR.getFeatures():
                         features.append(feature)
                         feature.setAttribute('sito', Sito)
-
                         sourceLYR.updateFeature(feature)
                     destLYR.startEditing()
                     data_provider = destLYR.dataProvider()
