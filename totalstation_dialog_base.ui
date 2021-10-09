@@ -410,218 +410,190 @@
       <attribute name="title">
        <string>ProcessData</string>
       </attribute>
-      <widget class="QComboBox" name="comboBox_format2">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>80</y>
-         <width>631</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>geojson</string>
-        </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEdit_input"/>
        </item>
-       <item>
-        <property name="text">
-         <string>dxf</string>
-        </property>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="lineEdit_output"/>
        </item>
-       <item>
-        <property name="text">
-         <string>csv pyarchinit_us</string>
-        </property>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="comboBox_format2">
+         <item>
+          <property name="text">
+           <string>geojson</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>dxf</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>csv pyarchinit_us</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>csv pyarchinit_rif</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>csv pyarchinit_sample</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>csv</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>txt</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>dat</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>sql</string>
+          </property>
+         </item>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>csv pyarchinit_rif</string>
-        </property>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox_format">
+         <item>
+          <property name="text">
+           <string>geomax_gsi</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>geomax_txt</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>leica_gsi</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>leica_tcr_1205</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>leica_tcr_705</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>topcon_gts</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>topcon_gpt</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>sokkia_sdr33</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>trimble_dc</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>trimble_are</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>nikon_raw_v200</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>zeiss_r5</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>zeiss_rec_500</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>landxml</string>
+          </property>
+         </item>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>csv pyarchinit_sample</string>
-        </property>
+       <item row="1" column="2">
+        <widget class="QToolButton" name="toolButton_input">
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>csv</string>
-        </property>
+       <item row="3" column="2">
+        <widget class="QToolButton" name="toolButton_output">
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>txt</string>
-        </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Format input</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>dat</string>
-        </property>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>Format output</string>
+         </property>
+        </widget>
        </item>
-       <item>
-        <property name="text">
-         <string>sql</string>
-        </property>
+       <item row="4" column="0" colspan="3">
+        <widget class="QTableView" name="tableView">
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="gridStyle">
+          <enum>Qt::DashDotDotLine</enum>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderCascadingSectionResizes">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+        </widget>
        </item>
-      </widget>
-      <widget class="QComboBox" name="comboBox_format">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>20</y>
-         <width>631</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string>geomax_gsi</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>geomax_txt</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>leica_gsi</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>leica_tcr_1205</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>leica_tcr_705</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>topcon_gts</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>topcon_gpt</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>sokkia_sdr33</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>trimble_dc</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>trimble_are</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>nikon_raw_v200</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>zeiss_r5</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>zeiss_rec_500</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>landxml</string>
-        </property>
-       </item>
-      </widget>
-      <widget class="QToolButton" name="toolButton_output">
-       <property name="geometry">
-        <rect>
-         <x>660</x>
-         <y>110</y>
-         <width>27</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-      </widget>
-      <widget class="QToolButton" name="toolButton_input">
-       <property name="geometry">
-        <rect>
-         <x>660</x>
-         <y>50</y>
-         <width>27</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_input">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>50</y>
-         <width>631</width>
-         <height>22</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_output">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>110</y>
-         <width>631</width>
-         <height>22</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QTableView" name="tableView">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>230</y>
-         <width>675</width>
-         <height>511</height>
-        </rect>
-       </property>
-       <property name="alternatingRowColors">
-        <bool>true</bool>
-       </property>
-       <property name="gridStyle">
-        <enum>Qt::DashDotDotLine</enum>
-       </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-       <attribute name="horizontalHeaderStretchLastSection">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="verticalHeaderCascadingSectionResizes">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="verticalHeaderShowSortIndicator" stdset="0">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="verticalHeaderStretchLastSection">
-        <bool>true</bool>
-       </attribute>
-      </widget>
+      </layout>
      </widget>
     </widget>
    </item>
