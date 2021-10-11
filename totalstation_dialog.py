@@ -231,7 +231,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                 elif self.comboBox_format2.currentIndex()== 2:
 
-                    self.convert_csv()
+                    #self.convert_csv()
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=yes&subsetIndex=yes&watchFile=no"
                     layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Quote", "delimitedtext")
 
@@ -560,7 +560,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                 elif self.comboBox_format2.currentIndex() == 2:
 
-                    self.convert_csv()
+                    #self.convert_csv()
                     uri = "file:///" + str(
                         self.lineEdit_output.text()) + "?type=csv&xField=x&yField=y&spatialIndex=yes&subsetIndex=yes&watchFile=no"
                     layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Quote", "delimitedtext")
