@@ -231,7 +231,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                 elif self.comboBox_format2.currentIndex()== 2:
 
-                    #self.convert_csv()
+                    self.convert_csv()
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=yes&subsetIndex=yes&watchFile=no"
                     layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Quote", "delimitedtext")
 
@@ -259,7 +259,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     Misura = str(ID_M[0])
                     ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
                     Disegnatore = str(ID_Disegnatore[0])
-
+                    features = []
                     if self.checkBox_coord.isChecked():
                         ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
                         x = float(ID_X[0])
@@ -268,7 +268,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                         ID_Z = QInputDialog.getText(None, 'Z', 'Input Elevation')
                         q = float(ID_Z[0])
 
-                        features = []
+
                         expression1 = QgsExpression('x($geometry)+{}'.format(x))
                         expression2 = QgsExpression('y($geometry)+{}'.format(y))
                         context = QgsExpressionContext()
@@ -349,7 +349,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     #Dialog Box for input "name sito archeologico" to select it...
                     ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
                     Sito = str(ID_Sito[0])
-                    #a=[]
+                    features = []
                     if self.checkBox_coord.isChecked():
                         ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
                         x = float(ID_X[0])
@@ -359,7 +359,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                         q = float(ID_Z[0])
 
 
-                        features = []
+
                         expression1 = QgsExpression('x($geometry)+{}'.format(x))
                         expression2 = QgsExpression('y($geometry)+{}'.format(y))
                         context = QgsExpressionContext()
@@ -560,7 +560,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
 
                 elif self.comboBox_format2.currentIndex() == 2:
 
-                    #self.convert_csv()
+                    self.convert_csv()
                     uri = "file:///" + str(
                         self.lineEdit_output.text()) + "?type=csv&xField=x&yField=y&spatialIndex=yes&subsetIndex=yes&watchFile=no"
                     layer = QgsVectorLayer(uri, "totalopenstation Pyarchinit Quote", "delimitedtext")
