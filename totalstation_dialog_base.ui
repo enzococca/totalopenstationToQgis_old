@@ -607,7 +607,7 @@
    <item row="1" column="1">
     <widget class="QCheckBox" name="checkBox_coord">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>CheckBox coord</string>
