@@ -259,21 +259,63 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     Misura = str(ID_M[0])
                     ID_Disegnatore = QInputDialog.getText(None, 'Disegnatore', 'Input Nome del Disegnatore')
                     Disegnatore = str(ID_Disegnatore[0])
-                    features = []
-                    for feature in sourceLYR.getFeatures():
-                        features.append(feature)
-                        feature.setAttribute('sito_q', Sito)
-                        feature.setAttribute('unita_misu_q', Misura)
-                        feature.setAttribute('x', str(date.today().isoformat()))
-                        feature.setAttribute('y', Disegnatore)
-                        #i += 1
-                        sourceLYR.updateFeature(feature)
-                    destLYR.startEditing()
-                    data_provider = destLYR.dataProvider()
-                    data_provider.addFeatures(features)
-                    iface.mapCanvas().zoomToSelected()
-                    destLYR.commitChanges()
 
+                    if self.checkBox_coord.isChecked():
+                        ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
+                        x = float(ID_X[0])
+                        ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
+                        y = float(ID_Y[0])
+                        ID_Z = QInputDialog.getText(None, 'Z', 'Input Elevation')
+                        q = float(ID_Z[0])
+
+                        features = []
+                        expression1 = QgsExpression('x($geometry)+{}'.format(x))
+                        expression2 = QgsExpression('y($geometry)+{}'.format(y))
+                        context = QgsExpressionContext()
+                        scope = QgsExpressionContextScope()
+                        context.appendScope(scope)
+
+                        for feature in sourceLYR.getFeatures():
+                            scope.setFeature(feature)
+                            a = expression1.evaluate(context)
+                            b = expression2.evaluate(context)
+                            if a and b:
+                                features.append(feature)
+                                feature.setAttribute('sito_q', Sito)
+                                feature.setAttribute('unita_misu_q', Misura)
+                                feature.setAttribute('x', str(date.today().isoformat()))
+                                feature.setAttribute('y', Disegnatore)
+                                attr_Q = feature.attributes()[5]
+                                p = q + float(attr_Q)
+
+                                feature.setAttribute('quota_q', p)
+
+                                geom = feature.geometry()
+                                geom.get().setX(a)
+                                geom.get().setY(b)
+
+                                feature.setGeometry(geom)
+                                sourceLYR.updateFeature(feature)
+                            destLYR.startEditing()
+                            data_provider = destLYR.dataProvider()
+                            data_provider.addFeatures(features)
+                            iface.mapCanvas().zoomToSelected()
+                            destLYR.commitChanges()
+                    else:
+                        for feature in sourceLYR.getFeatures():
+
+                            features.append(feature)
+                            feature.setAttribute('sito_q', Sito)
+                            feature.setAttribute('unita_misu_q', Misura)
+                            feature.setAttribute('x', str(date.today().isoformat()))
+                            feature.setAttribute('y', Disegnatore)
+
+                            sourceLYR.updateFeature(feature)
+                        destLYR.startEditing()
+                        data_provider = destLYR.dataProvider()
+                        data_provider.addFeatures(features)
+                        iface.mapCanvas().zoomToSelected()
+                        destLYR.commitChanges()
 
                     QgsProject.instance().removeMapLayer(sourceLYR)
                     ###########finish############################################
@@ -368,7 +410,7 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                         destLYR.commitChanges()
 
 
-                    #QgsProject.instance().removeMapLayer(sourceLYR)
+                    QgsProject.instance().removeMapLayer(sourceLYR)
                     ###########finish############################################
 
 
@@ -395,27 +437,62 @@ class TotalopenstationDialog(QtWidgets.QDialog, FORM_CLASS):
                     '''copy and past from totalstation to pyarchinit'''
                     sourceLYR = QgsProject.instance().mapLayersByName('totalopenstation Pyarchinit Sample')[0]
                     destLYR = QgsProject.instance().mapLayersByName('Punti di campionatura')[0]
-                    #Dialog Box for input "name sito archeologico" to select it...
+                    # Dialog Box for input "name sito archeologico" to select it...
                     ID_Sito = QInputDialog.getText(None, 'Sito', 'Input Nome del sito archeologico')
                     Sito = str(ID_Sito[0])
+                    # a=[]
+                    if self.checkBox_coord.isChecked():
+                        ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
+                        x = float(ID_X[0])
+                        ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
+                        y = float(ID_Y[0])
 
-                    features = []
-                    for feature in sourceLYR.getFeatures():
-                        features.append(feature)
-                        feature.setAttribute('sito', Sito)
 
-                        #i += 1
-                        sourceLYR.updateFeature(feature)
-                    destLYR.startEditing()
-                    data_provider = destLYR.dataProvider()
-                    data_provider.addFeatures(features)
-                    iface.mapCanvas().zoomToSelected()
-                    destLYR.commitChanges()
+                        features = []
+                        expression1 = QgsExpression('x($geometry)+{}'.format(x))
+                        expression2 = QgsExpression('y($geometry)+{}'.format(y))
+                        context = QgsExpressionContext()
+                        scope = QgsExpressionContextScope()
+                        context.appendScope(scope)
 
+                        for feature in sourceLYR.getFeatures():
+                            scope.setFeature(feature)
+                            a = expression1.evaluate(context)
+                            b = expression2.evaluate(context)
+                            if a and b:
+                                features.append(feature)
+
+                                feature.setAttribute('sito', Sito)
+                                geom = feature.geometry()
+                                geom.get().setX(a)
+                                geom.get().setY(b)
+
+                                feature.setGeometry(geom)
+                                sourceLYR.updateFeature(feature)
+
+                        destLYR.startEditing()
+                        data_provider = destLYR.dataProvider()
+                        data_provider.addFeatures(features)
+                        iface.mapCanvas().zoomToSelected()
+                        destLYR.commitChanges()
+
+
+                    else:
+
+                        features = []
+                        for feature in sourceLYR.getFeatures():
+                            features.append(feature)
+                            feature.setAttribute('sito', Sito)
+                            sourceLYR.updateFeature(feature)
+
+                        destLYR.startEditing()
+                        data_provider = destLYR.dataProvider()
+                        data_provider.addFeatures(features)
+                        iface.mapCanvas().zoomToSelected()
+                        destLYR.commitChanges()
 
                     QgsProject.instance().removeMapLayer(sourceLYR)
                     ###########finish############################################
-
 
                 elif self.comboBox_format2.currentIndex()== 5:
                     uri = "file:///"+str(self.lineEdit_output.text())+"?type=csv&xField=x&yField=y&spatialIndex=no&subsetIndex=no&watchFile=no"
