@@ -500,6 +500,11 @@
          </item>
          <item>
           <property name="text">
+           <string>topcon_ascii</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>topcon_gt7</string>
           </property>
          </item>
