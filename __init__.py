@@ -36,9 +36,8 @@ L=QgsSettings().value("locale/userLocale")[0:2]
 missing_libraries = []
 try:
     
-    import pkg_resources
-
-    pkg_resources.require("totalopenstation==0.5.2.17_dev_enzo")
+    import totalopenstation
+    #pkg_resources.require("totalopenstation==0.5.2.17_dev_enzo")
     
 
 except Exception as e:
