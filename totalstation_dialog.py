@@ -253,46 +253,46 @@ class TotalopenstationDialog(QtWidgets.QDialog):
                     Disegnatore = str(ID_Disegnatore[0])
                     features = []
                     if self.checkBox_coord.isChecked():
-                        ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
-                        x = float(ID_X[0])
-                        ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
-                        y = float(ID_Y[0])
+                        # ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
+                        # x = float(ID_X[0])
+                        # ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
+                        # y = float(ID_Y[0])
                         ID_Z = QInputDialog.getText(None, 'Z', 'Input Elevation')
                         q = float(ID_Z[0])
 
 
-                        expression1 = QgsExpression('x($geometry)+{}'.format(x))
-                        expression2 = QgsExpression('y($geometry)+{}'.format(y))
-                        context = QgsExpressionContext()
-                        scope = QgsExpressionContextScope()
-                        context.appendScope(scope)
+                        # expression1 = QgsExpression('x($geometry)+{}'.format(x))
+                        # expression2 = QgsExpression('y($geometry)+{}'.format(y))
+                        # context = QgsExpressionContext()
+                        # scope = QgsExpressionContextScope()
+                        # context.appendScope(scope)
 
                         for feature in sourceLYR.getFeatures():
-                            scope.setFeature(feature)
-                            a = expression1.evaluate(context)
-                            b = expression2.evaluate(context)
-                            if a and b:
-                                features.append(feature)
-                                feature.setAttribute('sito_q', Sito)
-                                feature.setAttribute('unita_misu_q', Misura)
-                                feature.setAttribute('x', str(date.today().isoformat()))
-                                feature.setAttribute('y', Disegnatore)
-                                attr_Q = feature.attributes()[5]
-                                p = q + float(attr_Q)
+                            # scope.setFeature(feature)
+                            # a = expression1.evaluate(context)
+                            # b = expression2.evaluate(context)
+                            # if a and b:
+                            features.append(feature)
+                            feature.setAttribute('sito_q', Sito)
+                            feature.setAttribute('unita_misu_q', Misura)
+                            feature.setAttribute('x', str(date.today().isoformat()))
+                            feature.setAttribute('y', Disegnatore)
+                            attr_Q = feature.attributes()[5]
+                            p = q + float(attr_Q)
 
-                                feature.setAttribute('quota_q', p)
+                            feature.setAttribute('quota_q', p)
 
-                                geom = feature.geometry()
-                                geom.get().setX(a)
-                                geom.get().setY(b)
+                            # geom = feature.geometry()
+                            # geom.get().setX(a)
+                            # geom.get().setY(b)
 
-                                feature.setGeometry(geom)
-                                sourceLYR.updateFeature(feature)
-                            destLYR.startEditing()
-                            data_provider = destLYR.dataProvider()
-                            data_provider.addFeatures(features)
-                            iface.mapCanvas().zoomToSelected()
-                            destLYR.commitChanges()
+                            # feature.setGeometry(geom)
+                            sourceLYR.updateFeature(feature)
+                        destLYR.startEditing()
+                        data_provider = destLYR.dataProvider()
+                        data_provider.addFeatures(features)
+                        iface.mapCanvas().zoomToSelected()
+                        destLYR.commitChanges()
                     else:
                         for feature in sourceLYR.getFeatures():
 
@@ -343,41 +343,41 @@ class TotalopenstationDialog(QtWidgets.QDialog):
                     Sito = str(ID_Sito[0])
                     features = []
                     if self.checkBox_coord.isChecked():
-                        ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
-                        x = float(ID_X[0])
-                        ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
-                        y = float(ID_Y[0])
+                        # ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
+                        # x = float(ID_X[0])
+                        # ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
+                        # y = float(ID_Y[0])
                         ID_Z = QInputDialog.getText(None, 'Z', 'Input Elevation')
                         q = float(ID_Z[0])
 
 
 
-                        expression1 = QgsExpression('x($geometry)+{}'.format(x))
-                        expression2 = QgsExpression('y($geometry)+{}'.format(y))
-                        context = QgsExpressionContext()
-                        scope = QgsExpressionContextScope()
-                        context.appendScope(scope)
+                        # expression1 = QgsExpression('x($geometry)+{}'.format(x))
+                        # expression2 = QgsExpression('y($geometry)+{}'.format(y))
+                        # context = QgsExpressionContext()
+                        # scope = QgsExpressionContextScope()
+                        # context.appendScope(scope)
 
                         for feature in sourceLYR.getFeatures():
-                            scope.setFeature(feature)
-                            a = expression1.evaluate(context)
-                            b = expression2.evaluate(context)
-                            if a and b:
-                                features.append(feature)
+                            # scope.setFeature(feature)
+                            # a = expression1.evaluate(context)
+                            # b = expression2.evaluate(context)
+                            # if a and b:
+                            features.append(feature)
 
-                                feature.setAttribute('sito', Sito)
-                                attr_Q = feature.attributes()[4]
-                                p=q + float(attr_Q)
+                            feature.setAttribute('sito', Sito)
+                            attr_Q = feature.attributes()[4]
+                            p=q + float(attr_Q)
 
-                                feature.setAttribute('quota', p)
+                            feature.setAttribute('quota', p)
 
-                                geom = feature.geometry()
-                                geom.get().setX(a)
-                                geom.get().setY(b)
+                                # geom = feature.geometry()
+                                # geom.get().setX(a)
+                                # geom.get().setY(b)
 
 
-                                feature.setGeometry(geom)
-                                sourceLYR.updateFeature(feature)
+                                # feature.setGeometry(geom)
+                            sourceLYR.updateFeature(feature)
 
                         destLYR.startEditing()
                         data_provider = destLYR.dataProvider()
@@ -434,33 +434,33 @@ class TotalopenstationDialog(QtWidgets.QDialog):
                     Sito = str(ID_Sito[0])
                     # a=[]
                     if self.checkBox_coord.isChecked():
-                        ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
-                        x = float(ID_X[0])
-                        ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
-                        y = float(ID_Y[0])
+                        # ID_X = QInputDialog.getText(None, 'X', 'Input coord X')
+                        # x = float(ID_X[0])
+                        # ID_Y = QInputDialog.getText(None, 'Y', 'Input Coord Y')
+                        # y = float(ID_Y[0])
 
 
                         features = []
-                        expression1 = QgsExpression('x($geometry)+{}'.format(x))
-                        expression2 = QgsExpression('y($geometry)+{}'.format(y))
-                        context = QgsExpressionContext()
-                        scope = QgsExpressionContextScope()
-                        context.appendScope(scope)
+                        # expression1 = QgsExpression('x($geometry)+{}'.format(x))
+                        # expression2 = QgsExpression('y($geometry)+{}'.format(y))
+                        # context = QgsExpressionContext()
+                        # scope = QgsExpressionContextScope()
+                        # context.appendScope(scope)
 
                         for feature in sourceLYR.getFeatures():
-                            scope.setFeature(feature)
-                            a = expression1.evaluate(context)
-                            b = expression2.evaluate(context)
-                            if a and b:
-                                features.append(feature)
+                            # scope.setFeature(feature)
+                            # a = expression1.evaluate(context)
+                            # b = expression2.evaluate(context)
+                            # if a and b:
+                            features.append(feature)
 
-                                feature.setAttribute('sito', Sito)
-                                geom = feature.geometry()
-                                geom.get().setX(a)
-                                geom.get().setY(b)
+                            feature.setAttribute('sito', Sito)
+                            # geom = feature.geometry()
+                            # geom.get().setX(a)
+                            # geom.get().setY(b)
 
-                                feature.setGeometry(geom)
-                                sourceLYR.updateFeature(feature)
+                            # feature.setGeometry(geom)
+                            sourceLYR.updateFeature(feature)
 
                         destLYR.startEditing()
                         data_provider = destLYR.dataProvider()
