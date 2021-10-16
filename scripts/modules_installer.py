@@ -36,9 +36,16 @@ elif platform.system()=='Darwin':
     cmd = '{}/bin/python{}'.format(python_path, python_version)
 else:
     cmd = '{}/bin/python{}'.format(python_path, python_version)
-try:
-    subprocess.check_call(['python','-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main'], shell=True)
-except:
-    subprocess.check_call([cmd,'-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main' ], shell=False)
-else:
-    pass
+
+if not packages:
+    packages = [
+        'totalopenstation']
+
+for p in packages:
+    try:
+        subprocess.check_call([cmd,'-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main'], shell=True)
+    except KeyError as e:
+        print(e)
+    else:
+        subprocess.check_call(
+            [cmd, '-m', 'pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main'], shell=False)
