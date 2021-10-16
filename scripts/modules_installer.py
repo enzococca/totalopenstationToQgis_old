@@ -43,7 +43,7 @@ if not packages:
 
 for p in packages:
     try:
-        subprocess.check_call(['python','-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main'], shell=True)
+        subprocess.check_call([cmd,'-m','pip', 'install', 'https://github.com/enzococca/totalopenstation/zipball/main'], shell=True)
     except KeyError as e:
         print(e)
     else:
