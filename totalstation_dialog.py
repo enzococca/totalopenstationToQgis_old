@@ -170,7 +170,7 @@ class TotalopenstationDialog(QtWidgets.QDialog):
     def convert_csv(self):
         try:
             df = pd.read_csv(str(self.lineEdit_output.text()))
-            df[['area_q', 'us_q']] = df['us_q'].str.split('-', expand=True)
+            df[['area_q', 'point_name']] = df['point_name'].str.split('-', expand=True)
             df.to_csv(str(self.lineEdit_output.text()), encoding='utf-8', index=False)
         except:
             pass
