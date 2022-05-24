@@ -11,7 +11,6 @@
         copyright            : (C) 2021 by Enzo Cocca adArte srl; Stefano Costa
         email                : enzo.ccc@gmail.com
  ***************************************************************************/
-
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,6 +29,7 @@ import platform
 import csv
 import tempfile
 import textwrap as tr
+from qgis.PyQt.uic import loadUiType
 from qgis.PyQt import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import  *
@@ -39,15 +39,16 @@ from qgis.PyQt import  QtWidgets
 from qgis.core import  *
 from qgis.gui import  *
 from qgis.utils import iface
-
-class TotalopenstationDialog(QtWidgets.QDialog):
+FORM_CLASS, _ = loadUiType(os.path.join(os.path.dirname(__file__),'totalstation_dialog_base.ui'))
+class TotalopenstationDialog(QDialog, FORM_CLASS):
 
 
     def __init__(self, parent=None):
         """Constructor."""
         super(TotalopenstationDialog, self).__init__(parent)
-        uic.loadUi(os.path.join(os.path.dirname(__file__),
-                                'totalstation_dialog_base.ui'), self)
+        self.setupUi(self)
+        self.iface = iface
+        self.canvas = iface.mapCanvas()
 
         self.model = QtGui.QStandardItemModel(self)
         self.tableView.setModel(self.model)
@@ -883,4 +884,3 @@ class TotalopenstationDialog(QtWidgets.QDialog):
                 r=open(str(self.lineEdit_save_raw.text()),'r')
                 lines = r.read().split(',')
                 self.textEdit.appendPlainText(str(lines))
-
